@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
 using Phoenix.Data;
+using Phoenix.Models;
 
 namespace Phoenix.Utilities
 {
@@ -53,7 +54,7 @@ namespace Phoenix.Utilities
 
             var roleManagerSvc = svcProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            var userManagerSvc = svcProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManagerSvc = svcProvider.GetRequiredService<UserManager<BTUser>>();
 
 
             //This is the programmatic equivalent to Update-Database
