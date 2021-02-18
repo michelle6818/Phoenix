@@ -122,10 +122,10 @@ namespace Phoenix.Utilities
             //Seed Default Admin User
             var defaultUser = new BTUser
             {
-                UserName = "araynor@coderfoundry.com",
-                Email = "araynor@coderfoundry.com",
-                FirstName = "Antonio",
-                LastName = "Raynor",
+                UserName = "mlongworth@alumni.unc.edu",
+                Email = "mlongworth@alumni.unc.edu",
+                FirstName = "Michelle",
+                LastName = "Longworth",
                 EmailConfirmed = true,
                 CompanyId = company3Id
             };
@@ -134,7 +134,7 @@ namespace Phoenix.Utilities
                 var user = await userManager.FindByEmailAsync(defaultUser.Email);
                 if (user == null)
                 {
-                    await userManager.CreateAsync(defaultUser, "Abc&123!");
+                    await userManager.CreateAsync(defaultUser, "Handsome02*");
                     await userManager.AddToRoleAsync(defaultUser, Roles.Admin.ToString());
                 }
             }
@@ -209,10 +209,10 @@ namespace Phoenix.Utilities
             //Seed Default Developer1 User
             defaultUser = new BTUser
             {
-                UserName = "srogers@coderfoundry.com",
-                Email = "srogers@coderfoundry.com",
-                FirstName = "Steve",
-                LastName = "Rogers",
+                UserName = "mlongworthdeveloper@gmail.com",
+                Email = "mlongworthdeveloper@gmail.com",
+                FirstName = "Michelle",
+                LastName = "Longworth",
                 EmailConfirmed = true,
                 CompanyId = company3Id
             };
@@ -221,7 +221,7 @@ namespace Phoenix.Utilities
                 var user = await userManager.FindByEmailAsync(defaultUser.Email);
                 if (user == null)
                 {
-                    await userManager.CreateAsync(defaultUser, "Abc&123!");
+                    await userManager.CreateAsync(defaultUser, "Handsome02*");
                     await userManager.AddToRoleAsync(defaultUser, Roles.Developer.ToString());
                 }
             }
@@ -354,10 +354,10 @@ namespace Phoenix.Utilities
             //Seed Default Submitter1 User
             defaultUser = new BTUser
             {
-                UserName = "ssummers@coderfoundry.com",
-                Email = "ssummers@coderfoundry.com",
-                FirstName = "Scott",
-                LastName = "Summers",
+                UserName = "michelle6818@gmail.com",
+                Email = "michelle6818@gmail.com",
+                FirstName = "Michelle",
+                LastName = "Longworth",
                 EmailConfirmed = true,
                 CompanyId = company3Id
             };
@@ -366,7 +366,7 @@ namespace Phoenix.Utilities
                 var user = await userManager.FindByEmailAsync(defaultUser.Email);
                 if (user == null)
                 {
-                    await userManager.CreateAsync(defaultUser, "Abc&123!");
+                    await userManager.CreateAsync(defaultUser, "Handsome02*");
                     await userManager.AddToRoleAsync(defaultUser, Roles.Submitter.ToString());
                 }
             }
