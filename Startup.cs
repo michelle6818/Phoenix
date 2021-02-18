@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Phoenix.Data;
 using Phoenix.Models;
+using Phoenix.Services;
 using Phoenix.Utilities;
 
 namespace Phoenix
@@ -32,6 +33,7 @@ namespace Phoenix
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     DataUtility.GetConnectionString(Configuration)));
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddIdentity<BTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -39,9 +41,13 @@ namespace Phoenix
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddScoped<IBTRoleService, BTRoleService>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddMvc();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Phoenix.Services
+@inject UserManager<BTUser> userManager 
+@inject IBTRoleService roleService
+
+@{ 
+    //var people = userManager.Users.ToList();
+    var users = new MultiSelectList(userManager.Users, "Id", "FullName");
+    var roles = new SelectList(roleService.NonDemoRoles(), "Name", "Name");
+}
+
+<form asp-action="ManageRoles" method="post">
+    <div class="row">
+        <div class="col">
+            <select name="userIds" multiple="multiple" asp-items="@users"></select>
+        </div>
+        <div class="col">
+            <select name="roleName" asp-items="@roles"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4 offset-4">
+         <button type="submit" class="btn btn-success btn-lg">Make it so!</button>
+        </div>       
+    </div>
+</form>
+
+    @foreach (var user in userManager.Users.ToList())
+    {
+      <div class="row">
+        <div class="col h5">@user.FullName</div>
+        <div class="col h6">@((await roleService.ListUserRolesAsync(user)).FirstOrDefault())</div>
+      </div>
+    }
