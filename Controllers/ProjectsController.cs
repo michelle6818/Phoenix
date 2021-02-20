@@ -6,18 +6,65 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Phoenix.Data;
+using Phoenix.Data.Enums;
 using Phoenix.Models;
+using Phoenix.Services;
 
 namespace Phoenix.Controllers
 {
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IBTProjectService _projectService;
+        private readonly IBTRoleService _roleService;
 
-        public ProjectsController(ApplicationDbContext context)
+        public ProjectsController(
+            ApplicationDbContext context,
+            IBTProjectService projectService,
+            IBTRoleService roleService)
         {
             _context = context;
+            _projectService = projectService;
+            _roleService = roleService;
         }
+
+        public async Task<IActionResult> ManageUsersOnProject()
+        {
+            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
+            ViewData["ProjectManagerId"] = new SelectList(await _roleService.UsersInRoleAsync(Roles.ProjectManager.ToString()), "Id", "FullName");
+            ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
+            ViewData["SubmitterIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Submitter.ToString()), "Id", "FullName");
+            
+            return View();
+        }
+
+
+        //projectId
+        //projectManagerId
+        //developerIds
+        //submitterIds
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ManageUsersOnProject(int projectId, string projectManagerId, List<string> developerIds, List<string> submitterIds)
+        {
+            var currentlyOnProject = await _projectService.UsersNotOnProjectAsync(projectId);
+            foreach(var user in currentlyOnProject)
+            {
+                await _projectService.RemoveUserFromProjectAsync(user.Id, projectId);
+            }
+            await _projectService.AddUserToProjectAsync(projectManagerId, projectId);
+            foreach(var userId in developerIds)
+            {
+                await _projectService.AddUserToProjectAsync(userId, projectId);
+            }
+            foreach (var userId in submitterIds)
+            {
+                await _projectService.AddUserToProjectAsync(userId, projectId);
+            }
+            return RedirectToAction(nameof(Details), new { id = projectId });
+        }
+
+
 
         // GET: Projects
         public async Task<IActionResult> Index()
@@ -41,6 +88,9 @@ namespace Phoenix.Controllers
             {
                 return NotFound();
             }
+            ViewData["ProjectManagerId"] = new SelectList(await _roleService.UsersInRoleAsync(Roles.ProjectManager.ToString()), "Id", "FullName");
+            ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
+            ViewData["SubmitterIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Submitter.ToString()), "Id", "FullName");
 
             return View(project);
         }

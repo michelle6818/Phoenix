@@ -1,0 +1,47 @@
+﻿
+<div class="card">
+    <div class="card-body bg-info">
+        <h4 class="card-title text-light text-center">User Management</h4>
+        <form asp-action="ManageUsersOnProject" method="post">
+            <br />
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="h5 text-light">Choose a Project</label>
+                        <select name="projectId" class="form-control" asp-items="@ViewBag.ProjectId"></select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="h5 text-light">Choose one Project Manager</label>
+                        <select name="projectManagerId" class="form-control" asp-items="@ViewBag.ProjectManagerId"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="h5 text-light">Choose some Developers</label>
+                        <select name="developerIds" multiple="multiple" class="form-control" asp-items="@ViewBag.DeveloperIds"></select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="h5 text-light">Choose some Submitters</label>
+                        <select name="submitterIds" multiple="multiple" class="form-control" asp-items="@ViewBag.SubmitterIds"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 offset-2">
+                    <button type="submit" class="btn btn-success btn-lg">Make it so!</button>
+                </div>
+               
+                    <div class="col offset-2">
+                        <a asp-controller="Projects" asp-action="ManageUsersOnProject" class="btn btn-danger btn-lg">Cancel</a>
+                    </div>
+               
+            </div>
+        </form>
+     </div>
+  </div>

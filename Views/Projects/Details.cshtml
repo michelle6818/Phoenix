@@ -1,7 +1,10 @@
 ﻿@model Phoenix.Models.Project
+@using Phoenix.Services
+@inject IBTProjectService projectService 
 
 @{
     ViewData["Title"] = "Details";
+    var test = await projectService.UsersOnProjectAsync(Model.Id);
 }
 
 <h1>Details</h1>
@@ -46,3 +49,8 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@foreach(var user in test)
+{
+    <p>@user.FullName</p>
+}

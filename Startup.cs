@@ -42,6 +42,7 @@ namespace Phoenix
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IBTRoleService, BTRoleService>();
+            services.AddScoped<IBTProjectService, BTProjectService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
