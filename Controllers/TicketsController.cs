@@ -2,21 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Phoenix.Data;
 using Phoenix.Models;
+using Phoenix.Services;
 
 namespace Phoenix.Controllers
 {
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<BTUser> _userManager;
+        private readonly IBTHistoryService _historyService;
 
-        public TicketsController(ApplicationDbContext context)
+        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTHistoryService historyService)
         {
             _context = context;
+            _userManager = userManager;
+            _historyService = historyService;
         }
 
         // GET: Tickets
@@ -118,12 +124,41 @@ namespace Phoenix.Controllers
                 return NotFound();
             }
 
+            //Get Old Ticket
+            Ticket oldTicket = await _context.Tickets
+                .Include(t => t.TicketType)
+                .Include(t => t.TicketPriority)
+                .Include(t => t.TicketStatus)
+                .Include(t => t.Project)
+                .Include(t => t.DeveloperUser)
+                .AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(ticket);
                     await _context.SaveChangesAsync();
+
+                    //Add History
+
+                    //Get User Id
+                    string userId = _userManager.GetUserId(User);
+
+                    //Get New Ticket
+                    Ticket newTicket = await _context.Tickets
+                     .Include(t => t.TicketType)
+                     .Include(t => t.TicketPriority)
+                     .Include(t => t.TicketStatus)
+                     .Include(t => t.Project)
+                     .Include(t => t.DeveloperUser)
+                     .AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+
+                    //Call History Service
+                    await _historyService.AddHistoryAsync(oldTicket, newTicket, userId);
+                    //await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -136,8 +171,9 @@ namespace Phoenix.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
+
+
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
             ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,8 @@ namespace Phoenix
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            services.AddScoped<IBTHistoryService, BTHistoryService>();
+
             services.AddIdentity<BTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddDefaultUI()
                 .AddDefaultTokenProviders()
@@ -43,6 +46,10 @@ namespace Phoenix
 
             services.AddScoped<IBTRoleService, BTRoleService>();
             services.AddScoped<IBTProjectService, BTProjectService>();
+
+            //Email
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddTransient<IEmailSender, EmailService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();

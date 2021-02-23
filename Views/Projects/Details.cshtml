@@ -42,7 +42,7 @@
             @Html.DisplayNameFor(model => model.Company)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Company.Id)
+            @Html.DisplayFor(model => model.Company.Name)
         </dd>
         <dt class="col-sm-2">
             Team Members
@@ -133,10 +133,10 @@
                     @Html.DisplayFor(modelItem => item.TicketStatus.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OwnerUser.Id)
+                    @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DeveloperUser.Id)
+                    @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
                 </td>
                 <td>
                     <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
