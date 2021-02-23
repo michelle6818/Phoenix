@@ -1,56 +1,149 @@
 ﻿@model Phoenix.Models.Project
 @using Phoenix.Services
-@inject IBTProjectService projectService 
+@inject IBTProjectService projectService
+@inject IBTRoleService roleService
+@inject Microsoft.AspNetCore.Identity.UserManager<BTUser> _userManager
 
 @{
     ViewData["Title"] = "Details";
     var test = await projectService.UsersOnProjectAsync(Model.Id);
 }
 
-<h1>Details</h1>
 
 <div>
-    <h4>Project</h4>
+    <h4>Project Details</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ImageFileName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ImageFileName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ImageFileData)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ImageFileData)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Company)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Company.Id)
         </dd>
+        <dt class="col-sm-2">
+            Team Members
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var user in test)
+            {
+                <p>@user.FullName</p>
+            }
+        </dd>
     </dl>
+    <table class="table">
+        <thead>
+            <tr>
+            </tr>
+        </thead>
+    </table>
 </div>
 <div>
+    <a asp-action="ManageUsersOnProject" asp-route-id="@Model.Id">Add Team Members</a> |
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
 
-@foreach(var user in test)
-{
-    <p>@user.FullName</p>
-}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Created
+            </th>
+            <th>
+                Updated
+            </th>
+            <th>
+                Project
+            </th>
+            <th>
+                Ticket Type
+            </th>
+            <th>
+                Ticket Priority
+            </th>
+            <th>
+                Ticket Status
+            </th>
+            <th>
+                Owner User
+            </th>
+            <th>
+               Developer User
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Tickets)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Updated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Project.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketType.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketPriority.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketStatus.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OwnerUser.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeveloperUser.Id)
+                </td>
+                <td>
+                    <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-controller="Tickets" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

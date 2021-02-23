@@ -35,40 +35,41 @@ namespace Phoenix.Services
 
             try
             {
-                if(!await IsUserOnProjectAsync(userId, projectId))
+                if (!await IsUserOnProjectAsync(userId, projectId))
                 {
-                  //GEt the user's record
-                  BTUser user = await _userManager.FindByIdAsync(userId);
+                    //GEt the user's record
+                    BTUser user = await _userManager.FindByIdAsync(userId);
                     //Project manger is a specialcase, check for that role first
-                    if(await _roleService.IsUserInRoleAsync(user, Roles.ProjectManager.ToString())) 
+                    if (await _roleService.IsUserInRoleAsync(user, Roles.ProjectManager.ToString()))
                     {
-                        //Find the old prokect manager and emove them from tje project
+                        //Find the old project manager and remove them from the project
                         var oldManager = await ProjectManagerOnProjectAsync(projectId);
-                        if(oldManager != null)
+                        if (oldManager != null)
                         {
                             await RemoveUserFromProjectAsync(oldManager.Id, projectId);
                         }
-                        await RemoveUserFromProjectAsync(oldManager.Id, projectId);
+                        await RemoveUserFromProjectAsync(userId, projectId);
                     }
-                    //Get the project's full record
-                  Project project = await _context.Projects.FindAsync(projectId);
+                    ////Get the project's full record
+                    Project project = await _context.Projects.FindAsync(projectId);
 
-                    try
-                    {
-                        //Add the user recordto the virtual ICollection of the project - Entity Framework does the heavy lifting here
-                        project.Members.Add(user);
-                        //Same way to write it:
-                        //user.Projects.Add(project);
-                        await _context.SaveChangesAsync();
-                    }
-                    //If there is a problem throw it to the outer catch
-                    catch (Exception)
-                    {
-                        throw;
+                        try
+                        {
+                            //Add the user recordto the virtual ICollection of the project - Entity Framework does the heavy lifting here
+                            project.Members.Add(user);
+                            //Same way to write it:
+                            //user.Projects.Add(project);
+                            await _context.SaveChangesAsync();
+                        }
+                        //If there is a problem throw it to the outer catch
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+
                     }
 
-                }
-              
+                
             }
             //If there is a problem print it out in the debugger
             catch (Exception ex)

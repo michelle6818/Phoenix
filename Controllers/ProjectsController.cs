@@ -30,11 +30,11 @@ namespace Phoenix.Controllers
 
         public async Task<IActionResult> ManageUsersOnProject()
         {
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
+            ViewData["ProjectId"] = new SelectList(_context.Set<Project>(), "Id", "Name");
             ViewData["ProjectManagerId"] = new SelectList(await _roleService.UsersInRoleAsync(Roles.ProjectManager.ToString()), "Id", "FullName");
             ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
             ViewData["SubmitterIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Submitter.ToString()), "Id", "FullName");
-            
+
             return View();
         }
 
@@ -48,12 +48,12 @@ namespace Phoenix.Controllers
         public async Task<IActionResult> ManageUsersOnProject(int projectId, string projectManagerId, List<string> developerIds, List<string> submitterIds)
         {
             var currentlyOnProject = await _projectService.UsersNotOnProjectAsync(projectId);
-            foreach(var user in currentlyOnProject)
+            foreach (var user in currentlyOnProject)
             {
                 await _projectService.RemoveUserFromProjectAsync(user.Id, projectId);
             }
             await _projectService.AddUserToProjectAsync(projectManagerId, projectId);
-            foreach(var userId in developerIds)
+            foreach (var userId in developerIds)
             {
                 await _projectService.AddUserToProjectAsync(userId, projectId);
             }
@@ -73,6 +73,15 @@ namespace Phoenix.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        ////Practice adding view list
+        //public async Task<IActionResult> ProjectMembers(int? id)
+        //{
+        //   var model = await _projectService.UsersOnProjectAsync(id.Value);
+
+
+        //    return View(model);
+        //}
+
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -82,18 +91,23 @@ namespace Phoenix.Controllers
             }
 
             var project = await _context.Projects
-                .Include(p => p.Company)
+                .Include(m => m.Company)
+                .Include(m => m.Tickets)
+                .Include(m => m.Members)
+                //.Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (project == null)
             {
                 return NotFound();
             }
+            ViewData["ProjectId"] = new SelectList(await _roleService.UsersInRoleAsync(Roles.ProjectManager.ToString()), "Id", "FullName");
             ViewData["ProjectManagerId"] = new SelectList(await _roleService.UsersInRoleAsync(Roles.ProjectManager.ToString()), "Id", "FullName");
             ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
             ViewData["SubmitterIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Submitter.ToString()), "Id", "FullName");
 
             return View(project);
         }
+
 
         // GET: Projects/Create
         public IActionResult Create()
