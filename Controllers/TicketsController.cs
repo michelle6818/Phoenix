@@ -47,6 +47,9 @@ namespace Phoenix.Controllers
                 .Include(t => t.TicketPriority)
                 .Include(t => t.TicketStatus)
                 .Include(t => t.TicketType)
+                .Include(t => t.Comments).ThenInclude(c => c.User)
+                .Include(t => t.Attachments).ThenInclude(a => a.User)
+                .Include(t => t.Histories)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (ticket == null)
             {
