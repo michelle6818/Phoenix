@@ -36,9 +36,7 @@ namespace Phoenix
                     DataUtility.GetConnectionString(Configuration)));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddScoped<IBTHistoryService, BTHistoryService>();
-
+           
             services.AddIdentity<BTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddDefaultUI()
                 .AddDefaultTokenProviders()
@@ -46,6 +44,8 @@ namespace Phoenix
 
             services.AddScoped<IBTRoleService, BTRoleService>();
             services.AddScoped<IBTProjectService, BTProjectService>();
+            services.AddScoped<IBTHistoryService, BTHistoryService>();
+            services.AddScoped<IBTFileService, BTFileService>();
 
             //Email
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));

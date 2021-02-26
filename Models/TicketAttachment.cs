@@ -22,6 +22,7 @@ namespace Phoenix.Models
         public IFormFile FormFile { get; set; }
         public string FileName { get; set; }
         public byte[] FileData { get; set; }
+        public string FilePath { get; set; }
 
         public string Description { get; set; }
         public DateTimeOffset Created { get; set; }

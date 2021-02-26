@@ -86,7 +86,7 @@ namespace Phoenix.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return RedirectToAction("Dashboard", "Home");
                 }
                 if (result.RequiresTwoFactor)
                 {

@@ -449,6 +449,9 @@ namespace Phoenix.Migrations
                     b.Property<string>("FileName")
                         .HasColumnType("text");
 
+                    b.Property<string>("FilePath")
+                        .HasColumnType("text");
+
                     b.Property<int>("TicketId")
                         .HasColumnType("integer");
 
