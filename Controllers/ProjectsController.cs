@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Phoenix.Services;
 
 namespace Phoenix.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,7 +29,7 @@ namespace Phoenix.Controllers
             _projectService = projectService;
             _roleService = roleService;
         }
-
+        [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> ManageUsersOnProject()
         {
             ViewData["ProjectId"] = new SelectList(_context.Set<Project>(), "Id", "Name");
@@ -39,10 +41,7 @@ namespace Phoenix.Controllers
         }
 
 
-        //projectId
-        //projectManagerId
-        //developerIds
-        //submitterIds
+        [Authorize(Roles = "Admin,ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ManageUsersOnProject(int projectId, string projectManagerId, List<string> developerIds, List<string> submitterIds)
@@ -129,7 +128,7 @@ namespace Phoenix.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", project.CompanyId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
             return View(project);
         }
 
@@ -146,7 +145,7 @@ namespace Phoenix.Controllers
             {
                 return NotFound();
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", project.CompanyId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
             return View(project);
         }
 
@@ -182,7 +181,7 @@ namespace Phoenix.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", project.CompanyId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
             return View(project);
         }
 

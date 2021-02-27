@@ -50,9 +50,9 @@ namespace Phoenix.Controllers
         // GET: Invites/Create
         public IActionResult Create()
         {
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id");
-            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name");
+            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "FullName");
+            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "FullName");
             return View();
         }
 
@@ -69,9 +69,9 @@ namespace Phoenix.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", invite.CompanyId);
-            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
-            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", invite.CompanyId);
+            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "FullName", invite.InviteeId);
+            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "FullName", invite.InvitorId);
             return View(invite);
         }
 
@@ -88,9 +88,9 @@ namespace Phoenix.Controllers
             {
                 return NotFound();
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", invite.CompanyId);
-            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
-            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", invite.CompanyId);
+            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "FullName", invite.InviteeId);
+            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "FullName", invite.InvitorId);
             return View(invite);
         }
 
@@ -126,9 +126,9 @@ namespace Phoenix.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", invite.CompanyId);
-            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
-            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", invite.CompanyId);
+            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "FullName", invite.InviteeId);
+            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "FUllName", invite.InvitorId);
             return View(invite);
         }
 

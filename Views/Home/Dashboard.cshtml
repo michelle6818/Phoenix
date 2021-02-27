@@ -1,8 +1,24 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Phoenix.Services
+@inject Phoenix.Services.IBTProjectService projectService
+@inject Microsoft.AspNetCore.Identity.UserManager<BTUser> _userManager
+@*@inject IBTTicketService ticketService*@
+@inject IBTRoleService roleService
+
+@{
+    ViewData["Title"] = "Dashboard";
+    var user = await _userManager.GetUserAsync(User);
+    var userId = _userManager.GetUserId(User);
+    var roles = await roleService.ListUserRolesAsync(user);
+    string roleName = "";
+    foreach (var role in roles)
+    {
+        if (role != "Demo")
+        {
+            roleName = role;
+        }
+    }
+
 }
-
-
 <div class="row layout-top-spacing">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
         <div class="row widget-statistic">

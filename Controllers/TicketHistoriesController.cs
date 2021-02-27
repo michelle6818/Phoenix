@@ -50,7 +50,7 @@ namespace Phoenix.Controllers
         public IActionResult Create()
         {
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName");
             return View();
         }
 
@@ -68,7 +68,7 @@ namespace Phoenix.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description", ticketHistory.TicketId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", ticketHistory.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName", ticketHistory.UserId);
             return View(ticketHistory);
         }
 
@@ -86,7 +86,7 @@ namespace Phoenix.Controllers
                 return NotFound();
             }
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description", ticketHistory.TicketId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", ticketHistory.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName", ticketHistory.UserId);
             return View(ticketHistory);
         }
 
@@ -123,7 +123,7 @@ namespace Phoenix.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description", ticketHistory.TicketId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", ticketHistory.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName", ticketHistory.UserId);
             return View(ticketHistory);
         }
 
