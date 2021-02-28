@@ -49,7 +49,7 @@ namespace Phoenix
 
             //Email
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            services.AddTransient<IEmailSender, EmailService>();
+            services.AddScoped<IEmailSender, EmailService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();

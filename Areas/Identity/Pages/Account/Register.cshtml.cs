@@ -22,24 +22,24 @@ namespace Phoenix.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
+        private readonly ApplicationDbContext _context;
         private readonly SignInManager<BTUser> _signInManager;
         private readonly UserManager<BTUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
+            ApplicationDbContext context,
             UserManager<BTUser> userManager,
             SignInManager<BTUser> signInManager,
             ILogger<RegisterModel> logger,
-            ApplicationDbContext context,
             IEmailSender emailSender)
         {
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _context = context;
         }
 
         [BindProperty]
@@ -61,8 +61,7 @@ namespace Phoenix.Areas.Identity.Pages.Account
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
 
-            [Required]
-            
+            [Required]           
             [Display(Name = "Company Id")]
             public int CompanyId { get; set; }
 
@@ -84,6 +83,7 @@ namespace Phoenix.Areas.Identity.Pages.Account
 
         }
 
+       
         public async Task OnGetAsync(string returnUrl = null)
         {
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name");
@@ -91,6 +91,7 @@ namespace Phoenix.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
+        //HttpPost
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");

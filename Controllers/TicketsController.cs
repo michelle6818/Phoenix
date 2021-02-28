@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,7 +29,13 @@ namespace Phoenix.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+            var applicationDbContext = _context.Tickets
+                .Include(t => t.DeveloperUser)
+                .Include(t => t.OwnerUser)
+                .Include(t => t.Project)
+                .Include(t => t.TicketPriority)
+                .Include(t => t.TicketStatus)
+                .Include(t => t.TicketType);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -49,7 +56,7 @@ namespace Phoenix.Controllers
                 .Include(t => t.TicketType)
                 .Include(t => t.Comments).ThenInclude(c => c.User)
                 .Include(t => t.Attachments).ThenInclude(a => a.User)
-                .Include(t => t.Histories)
+                .Include(t => t.Histories).ThenInclude(h => h.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (ticket == null)
             {
@@ -60,6 +67,7 @@ namespace Phoenix.Controllers
         }
 
         // GET: Tickets/Create
+        [Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
         public IActionResult Create()
         {
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName");
@@ -94,6 +102,7 @@ namespace Phoenix.Controllers
         }
 
         // GET: Tickets/Edit/5
+        [Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -187,6 +196,7 @@ namespace Phoenix.Controllers
         }
 
         // GET: Tickets/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

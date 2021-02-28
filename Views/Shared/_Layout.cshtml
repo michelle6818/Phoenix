@@ -3,7 +3,6 @@
    
 @{ var user = await _userManager.GetUserAsync(User);
     var userId = _userManager.GetUserId(User);
-    var roles = await roleService.ListUserRolesAsync(user);
     var roleName = "";
 }
     <!DOCTYPE html>
