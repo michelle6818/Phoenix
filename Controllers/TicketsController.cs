@@ -8,25 +8,37 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Phoenix.Data;
+using Phoenix.Data.Enums;
 using Phoenix.Models;
 using Phoenix.Services;
 
 namespace Phoenix.Controllers
 {
+    [Authorize]
+
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTHistoryService _historyService;
+        private readonly IBTProjectService _projectService;
+        private readonly IBTRoleService _roleService;
 
-        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTHistoryService historyService)
+        public TicketsController(ApplicationDbContext context, 
+            UserManager<BTUser> userManager, 
+            IBTHistoryService historyService,
+            IBTProjectService projectService,
+            IBTRoleService roleService)
         {
             _context = context;
             _userManager = userManager;
             _historyService = historyService;
+            _projectService = projectService;
+            _roleService = roleService;
         }
 
         // GET: Tickets
+       
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Tickets
@@ -39,6 +51,60 @@ namespace Phoenix.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        //GET: Ticket view per user
+        public async Task<IActionResult> MyTickets()
+        {
+            var model = new List<Ticket>();
+
+            //Test if ADMIN
+            if (User.IsInRole("Admin")) 
+            {
+                model = await _context.Tickets
+                  .Include(t => t.DeveloperUser)
+                  .Include(t => t.OwnerUser)
+                  .Include(t => t.Project)
+                  .Include(t => t.TicketPriority)
+                  .Include(t => t.TicketStatus)
+                  .Include(t => t.TicketType).ToListAsync();
+            }
+            //Test if ProjectManager
+            else if (User.IsInRole("ProjectManager"))
+            {
+                var userId = _userManager.GetUserId(User);
+                var projects = await _projectService.ListUserProjectsAsync(userId);
+
+                model = projects.SelectMany(p => p.Tickets).ToList();
+            }
+
+            //Test if Developer
+            else if (User.IsInRole("Developer"))
+            {
+                var userId = _userManager.GetUserId(User);
+                model = _context.Tickets
+                   .Include(t => t.DeveloperUser)
+                  .Include(t => t.OwnerUser)
+                  .Include(t => t.Project)
+                  .Include(t => t.TicketPriority)
+                  .Include(t => t.TicketStatus)
+                  .Include(t => t.TicketType).Where(t => t.DeveloperUserId == userId).ToList();
+            }
+
+            //Test if Submitter/Owner (anyone can submit/own a ticket)
+            else
+            {
+                var userId = _userManager.GetUserId(User);
+                model = _context.Tickets
+                  .Include(t => t.DeveloperUser)
+                  .Include(t => t.OwnerUser)
+                  .Include(t => t.Project)
+                  .Include(t => t.TicketPriority)
+                  .Include(t => t.TicketStatus)
+                  .Include(t => t.TicketType).Where(t => t.OwnerUserId == userId).ToList();
+            }     
+
+
+            return View(model);
+        }
         // GET: Tickets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -68,11 +134,14 @@ namespace Phoenix.Controllers
 
         // GET: Tickets/Create
         [Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName");
-            //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName");
+            var userId = _userManager.GetUserId(User);
+            var userProjects = await _projectService.ListUserProjectsAsync(userId);
+
+            ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
+            //ViewData["ProjectId"] = new SelectList(userProjects, "Id", "Name");
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
             ViewData["TicketStatusId"] = new SelectList(_context.TicketStatus, "Id", "Name");
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
@@ -84,7 +153,7 @@ namespace Phoenix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,DeveloperUserId")] Ticket ticket)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,DeveloperUserId,DeveloperIds")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
@@ -94,8 +163,13 @@ namespace Phoenix.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
+
+            var userId = _userManager.GetUserId(User);
+            var userProjects = await _projectService.ListUserProjectsAsync(userId);
+
+            ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
+            //ViewData["ProjectId"] = new SelectList(userProjects, "Id", "Name", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketStatusId"] = new SelectList(_context.TicketStatus, "Id", "Name", ticket.TicketStatusId);
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
@@ -116,7 +190,7 @@ namespace Phoenix.Controllers
             {
                 return NotFound();
             }
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
+            ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
             //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.OwnerUserId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
@@ -188,8 +262,8 @@ namespace Phoenix.Controllers
             }
 
 
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
-            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.OwnerUserId);
+            ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
+            //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.OwnerUserId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketStatusId"] = new SelectList(_context.TicketStatus, "Id", "Name", ticket.TicketStatusId);

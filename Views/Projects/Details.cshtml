@@ -62,9 +62,11 @@
     </table>
 </div>
 <div>
-    <a asp-action="ManageUsersOnProject" asp-route-id="@Model.Id">Add Team Members</a> |
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager")) {
+        <a asp-action="ManageUsersOnProject" asp-route-id="@Model.Id">Add Team Members</a> 
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> 
     <a asp-action="Index">Back to List</a>
+    }
 </div>
 
 
@@ -139,9 +141,11 @@
                     @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
                 </td>
                 <td>
-                    <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager")) { 
+                        <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Id">Details</a> 
                     <a asp-controller="Tickets" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            }
                 </td>
             </tr>
         }

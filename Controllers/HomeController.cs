@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Phoenix.Data;
 using Phoenix.Models;
+using Phoenix.Models.ViewModels;
 using Phoenix.Services;
 
 namespace Phoenix.Controllers
 {
+   
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -26,20 +31,41 @@ namespace Phoenix.Controllers
             _context = context;
         }
 
+
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
         }
+
+      
         public IActionResult Dashboard()
         {
-            return View();
+            DashboardViewModel model = new DashboardViewModel();
+            var tickets = _context.Tickets
+                .Include(t => t.TicketStatus)
+                .Include(t => t.TicketPriority)
+                .ToList();
+            var projects = _context.Projects
+                .Include(p => p.Company)
+                .Include(p => p.Members)
+                .ToList();
+
+            model.Tickets = tickets;
+            model.Projects = projects;
+
+            return View(model);
+
+            //return View();
         }
 
+      
         public IActionResult Privacy()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult ManageRoles()
         {
             return View();
@@ -47,6 +73,7 @@ namespace Phoenix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ManageRoles(List<string> userIds, string roleName)
         {  
             //Bo through all of the userIds sent one at a time
