@@ -20,6 +20,9 @@
 
 }
 <div class="row layout-top-spacing">
+
+
+
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
         <div class="row widget-statistic">
             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
@@ -89,75 +92,25 @@
         </div>
     </div>
 
-    <div class="col-xl-5 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-        <div class="widget widget-one">
-            <div class="widget-heading">
-                <h6 class="">Statistics</h6>
-            </div>
-            <div class="w-chart">
-                <div class="w-chart-section">
-                    <div class="w-detail">
-                        <p class="w-title">Total Visits</p>
-                        <p class="w-stats">423,964</p>
-                    </div>
-                    <div class="w-chart-render-one">
-                        <div id="total-users"></div>
-                    </div>
-                </div>
-
-                <div class="w-chart-section">
-                    <div class="w-detail">
-                        <p class="w-title">Paid Visits</p>
-                        <p class="w-stats">7,929</p>
-                    </div>
-                    <div class="w-chart-render-one">
-                        <div id="paid-visits"></div>
-                    </div>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col">
+            <canvas id="myChart" width="400" height="400"></canvas>
         </div>
     </div>
 
-    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-        <div class="widget widget-account-invoice-two">
-            <div class="widget-content">
-                <div class="account-box">
-                    <div class="info">
-                        <h5 class="">Pro Plan</h5>
-                        <p class="inv-balance">$10,344</p>
-                    </div>
-                    <div class="acc-action">
-                        <div class="">
-                            <a href="javascript:void(0);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></a>
-                            <a href="javascript:void(0);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></a>
-                        </div>
-                        <a href="javascript:void(0);">Upgrade</a>
-                    </div>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col">
+            <canvas id="myChart2" width="400" height="400"></canvas>
         </div>
     </div>
 
-    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-        <div class="widget widget-card-four">
-            <div class="widget-content">
-                <div class="w-content">
-                    <div class="w-info">
-                        <h6 class="value">$ 45,141</h6>
-                        <p class="">Expenses</p>
-                    </div>
-                    <div class="">
-                        <div class="w-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="progress">
-                    <div class="progress-bar bg-gradient-secondary" role="progressbar" style="width: 57%" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            </div>
+
+    <div class="row">
+        <div class="col">
+            <canvas id="myChart3" width="400" height="400"></canvas>
         </div>
     </div>
+
 
     <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
         <div class="widget widget-chart-three">
@@ -361,34 +314,6 @@
         </div>
     </div>
 
-
-    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-        <div class="widget widget-card-one">
-            <div class="widget-content">
-
-                <div class="media">
-                    <div class="w-img">
-                        <img src="assets/img/90x90.jpg" alt="avatar">
-                    </div>
-                    <div class="media-body">
-                        <h6>Jimmy Turner</h6>
-                        <p class="meta-date-time">Monday, Nov 18</p>
-                    </div>
-                </div>
-
-                <p>"Duis aute irure dolor" in reprehenderit in voluptate velit esse cillum "dolore eu fugiat" nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-
-                <div class="w-action">
-                    <div class="card-like">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
-                        <span>551 Likes</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
         <div class="widget widget-five">
             <div class="widget-content">
@@ -432,7 +357,7 @@
 
                 <div class="media">
                     <div class="w-img">
-                        <img src="assets/img/90x90.jpg" alt="avatar">
+                        <img src="" alt="avatar">
                     </div>
                     <div class="media-body">
                         <h6>Dev Summit - New York</h6>
@@ -442,12 +367,12 @@
 
                 <div class="card-bottom-section">
                     <h5>4 Members Going</h5>
-                    <div class="img-group">
-                        <img src="assets/img/90x90.jpg" alt="avatar">
-                        <img src="assets/img/90x90.jpg" alt="avatar">
-                        <img src="assets/img/90x90.jpg" alt="avatar">
-                        <img src="assets/img/90x90.jpg" alt="avatar">
-                    </div>
+                    @*<div class="img-group">
+                        <img src="" alt="avatar">
+                        <img src="" alt="avatar">
+                        <img src="" alt="avatar">
+                        <img src="" alt="avatar">
+                    </div>*@
                     <a href="javascript:void(0);" class="btn">View Details</a>
                 </div>
             </div>
@@ -455,14 +380,110 @@
     </div>
 
 </div>
-
-
-<div class="footer-wrapper">
-    <div class="footer-section f-section-1">
-        <p class="">Copyright © 2020 <a target="_blank" href="https://designreset.com">DesignReset</a>, All rights reserved.</p>
+    @*Footer*@
+    <div class="footer-wrapper">
+        <div class="footer-section f-section-1">
+            <p class="">Copyright © 2021 <a target="_blank" href="https://designreset.com">Phoenix Issue Tracker</a>, All rights reserved.</p>
+        </div>
+        <div class="footer-section f-section-2">
+            <p class="">Coded with <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></p>
+        </div>
     </div>
-    <div class="footer-section f-section-2">
-        <p class="">Coded with <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></p>
-    </div>
-</div>
 
+    @section Scripts {
+        <script src="//cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
+       @*Chart 1 Bar Chart*@
+        <script>
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [12, 19, 3, 5, 2, 3],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+
+            });
+        </script>
+
+       @*Chart 2 PolarArea Chart*@
+        <script>
+            var ctx = document.getElementById('myChart2').getContext('2d');
+            var myChart2 = new Chart(ctx,
+                {
+                   type: 'polarArea',
+                    data:
+                    {
+                       labels: ['Critical', 'Unassigned', 'Open'],
+                        datasets: [
+                        {
+                           label: 'Tickets By Priority',
+                           data: [300, 50, 100],
+                            backgroundColor: [
+                            "#19FF5A",
+                            "#FFCE19",
+                            "#0D22FF",
+                                        ],
+                          hoverOffset: 4
+                        }]
+                     }
+
+                 });
+        </script>
+
+         @*Chart 3 Doughnut Chart*@
+        <script>
+            //Step 1 generate the Url that we will call to get JSON
+            var Url1 = '@Url.Action("PriorityChart", "Charts")'; //represents the endpoint ( action + controller) that we want to hit
+
+            //Step 2 start the structure for our AJAX call
+            $.post(Url1).then(function (response) {
+                //Get the context/canvas for the chart
+                var ctx = document.getElementById('myChart3').getContext('2d');
+                //Use The JSON response to create the data property of the chart
+                var polarChartData = {
+                    labels: response.labels,
+                    datasets: [{
+                        label: 'Tickets By Priority',
+                        data: response.data,
+                        backgroundColor: response.backgroundColors,
+                        hoverOffset: 4
+                    }]
+                };
+                var myChart3 = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: polarChartData
+                })
+            });
+         </script>
+
+    }

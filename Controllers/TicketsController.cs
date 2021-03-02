@@ -71,7 +71,7 @@ namespace Phoenix.Controllers
         public IActionResult Create()
         {
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName");
-            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName");
+            //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName");
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
             ViewData["TicketStatusId"] = new SelectList(_context.TicketStatus, "Id", "Name");
@@ -84,16 +84,17 @@ namespace Phoenix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,DeveloperUserId")] Ticket ticket)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,DeveloperUserId")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
+                ticket.Created = DateTimeOffset.Now;
+                ticket.OwnerUserId = _userManager.GetUserId(User);
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
-            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.OwnerUserId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketStatusId"] = new SelectList(_context.TicketStatus, "Id", "Name", ticket.TicketStatusId);
@@ -116,7 +117,7 @@ namespace Phoenix.Controllers
                 return NotFound();
             }
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
-            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.OwnerUserId);
+            //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.OwnerUserId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketStatusId"] = new SelectList(_context.TicketStatus, "Id", "Name", ticket.TicketStatusId);
@@ -149,6 +150,7 @@ namespace Phoenix.Controllers
             {
                 try
                 {
+                    ticket.Updated = DateTimeOffset.Now;
                     _context.Update(ticket);
                     await _context.SaveChangesAsync();
 

@@ -13,20 +13,28 @@
     ViewData["Title"] = "Manage Roles";
 }
 
+
 <form asp-action="ManageRoles" method="post">
     <div class="row mt-2">
         <div class="col">
-            <select name="userIds" multiple="multiple" asp-items="@users"></select>
-        </div>
-        <div class="col">
-            <select name="roleName" asp-items="@roles"></select>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4 offset-4">
-            <button type="submit" class="btn btn-success btn-lg">Make it so!</button>
-        </div>
-    </div>
+            <div class="card bg-light-primary">
+                <div class="card-body">
+                    @*<div class="col-4">*@
+                        <select name="userIds" multiple="multiple" asp-items="@users"></select>
+                    </div>
+                <div class="card-body">
+                    @*<div class="col-4">*@
+                        <select name="roleName" asp-items="@roles"></select>
+                    </div>
+               
+                <div class="row">
+                    <div class="col-4 offset-4 mb-2">
+                        <button type="submit" class="btn btn-success btn-lg">Make it so!</button>
+                    </div>
+                </div>
+             </div>
+         </div>
+     </div>
 </form>
 
 
