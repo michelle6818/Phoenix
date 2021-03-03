@@ -13,14 +13,17 @@ namespace Phoenix.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
+        private readonly UserManager<BTUser> _userManager;
 
         //Constructors
         public BTHistoryService(
             ApplicationDbContext context,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            UserManager<BTUser> userManager)
         {
             _context = context;
             _emailSender = emailSender;
+            _userManager = userManager;
         }
 
         public async Task AddHistoryAsync(Ticket oldTicket, Ticket newTicket, string userId)
@@ -38,6 +41,26 @@ namespace Phoenix.Services
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
+
+                //Only notify the developer of changes if someone ELSE makes them
+                if (userId != oldTicket.DeveloperUserId)
+                {
+                    Notification notification = new Notification
+                    {
+                        TicketId = newTicket.Id,
+                        Description = "Your Ticket Title has been changed.",
+                        Created = DateTimeOffset.Now,
+                        SenderId = userId,
+                        RecipientId = newTicket.DeveloperUserId,
+                    };
+
+                    await _context.Notifications.AddAsync(notification);
+                    string devEmail = newTicket.DeveloperUser.Email;
+                    string subject = "Ticket Title Change";
+                    string message = $"The title for {oldTicket.Title} was changed to '{newTicket.Title}'.";
+
+                    await _emailSender.SendEmailAsync(devEmail, subject, message);
+                }
             }
 
             //---------------------------------------
@@ -56,6 +79,24 @@ namespace Phoenix.Services
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
+
+                if (userId != oldTicket.DeveloperUserId)
+                {
+                    Notification notification = new Notification
+                    {
+                        TicketId = newTicket.Id,
+                        Description = "Your Ticket Description has been changed.",
+                        Created = DateTimeOffset.Now,
+                        SenderId = userId,
+                        RecipientId = newTicket.DeveloperUserId,
+                    };
+                    await _context.Notifications.AddAsync(notification);
+                    string devEmail = newTicket.DeveloperUser.Email;
+                    string subject = "Ticket Description Change";
+                    string message = $"The description for {newTicket.Title} was changed to '{history.NewValue}'.";
+
+                    await _emailSender.SendEmailAsync(devEmail, subject, message);
+                }
             }
             //------------------------------------------
 
@@ -72,6 +113,24 @@ namespace Phoenix.Services
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
+
+                if (userId != oldTicket.DeveloperUserId)
+                {
+                    Notification notification = new Notification
+                    {
+                        TicketId = newTicket.Id,
+                        Description = "Your Ticket Type has been changed.",
+                        Created = DateTimeOffset.Now,
+                        SenderId = userId,
+                        RecipientId = newTicket.DeveloperUserId,
+                    };
+                    await _context.Notifications.AddAsync(notification);
+                    string devEmail = newTicket.DeveloperUser.Email;
+                    string subject = "Ticket Type Change";
+                    string message = $"The type for {newTicket.Title} was changed to {history.NewValue}.";
+
+                    await _emailSender.SendEmailAsync(devEmail, subject, message);
+                }
             }
             //-----------------------------------------------------------------
             if (oldTicket.TicketPriorityId != newTicket.TicketPriorityId)
@@ -87,6 +146,24 @@ namespace Phoenix.Services
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
+
+                if (userId != oldTicket.DeveloperUserId)
+                {
+                    Notification notification = new Notification
+                    {
+                        TicketId = newTicket.Id,
+                        Description = "Your Ticket Priority has been changed.",
+                        Created = DateTimeOffset.Now,
+                        SenderId = userId,
+                        RecipientId = newTicket.DeveloperUserId,
+                    };
+                    await _context.Notifications.AddAsync(notification);
+                    string devEmail = newTicket.DeveloperUser.Email;
+                    string subject = "Ticket Priority Change";
+                    string message = $"The priority for {newTicket.Title} was changed to {history.NewValue}.";
+
+                    await _emailSender.SendEmailAsync(devEmail, subject, message);
+                }
             }
             //----------------------------------------------------------------------
             if (oldTicket.TicketStatusId != newTicket.TicketStatusId)
@@ -102,6 +179,24 @@ namespace Phoenix.Services
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
+
+                if (userId != oldTicket.DeveloperUserId)
+                {
+                    Notification notification = new Notification
+                    {
+                        TicketId = newTicket.Id,
+                        Description = "Your Ticket Status has been changed.",
+                        Created = DateTimeOffset.Now,
+                        SenderId = userId,
+                        RecipientId = newTicket.DeveloperUserId,
+                    };
+                    await _context.Notifications.AddAsync(notification);
+                    string devEmail = newTicket.DeveloperUser.Email;
+                    string subject = "Ticket Status Change";
+                    string message = $"The status for {newTicket.Title} was changed to {history.NewValue}.";
+
+                    await _emailSender.SendEmailAsync(devEmail, subject, message);
+                }
             }
             //----------------------------------------------------------------------
             if (oldTicket.DeveloperUserId != newTicket.DeveloperUserId)
@@ -111,6 +206,19 @@ namespace Phoenix.Services
                 TicketHistory history = new TicketHistory();
 
                 if (oldTicket.DeveloperUserId == null)
+                {
+                    history = new TicketHistory
+                    {
+                        TicketId = newTicket.Id,
+                        Property = "Developer",
+                        OldValue = "Unassigned",
+                        NewValue = newTicket.DeveloperUser.FullName,
+                        Created = DateTimeOffset.Now,
+                        UserId = userId
+                    };
+                    await _context.TicketHistories.AddAsync(history);
+                }
+                else if (newTicket.DeveloperUserId == null)
                 {
                     history = new TicketHistory
                     {
@@ -137,30 +245,31 @@ namespace Phoenix.Services
                     await _context.TicketHistories.AddAsync(history);
                 }
 
-                Notification notification = new Notification
+                if (userId != oldTicket.DeveloperUserId)
                 {
-                    TicketId = newTicket.Id,
-                    Description = "You have a new ticket.",
-                    Created = DateTimeOffset.Now,
-                    SenderId = userId,
-                    RecipientId = newTicket.DeveloperUserId,
-                };
-                await _context.Notifications.AddAsync(notification);
+                    Notification notification = new Notification
+                    {
+                        TicketId = newTicket.Id,
+                        Description = "You have a new ticket.",
+                        Created = DateTimeOffset.Now,
+                        SenderId = userId,
+                        RecipientId = newTicket.DeveloperUserId,
+                    };
+                    await _context.Notifications.AddAsync(notification);
 
-                //Send an Email
-                string devEmail = newTicket.DeveloperUser.Email;
-                string subject = "New Ticket Assignment";
-                string message = $"You have a new ticket for project: {newTicket.Project.Name}";
+                    //Send an Email
+                    string devEmail = newTicket.DeveloperUser.Email;
+                    string subject = "New Ticket Assignment";
+                    string message = $"You have a new ticket for project: {newTicket.Project.Name}";
 
-                await _emailSender.SendEmailAsync(devEmail, subject, message);
+                    await _emailSender.SendEmailAsync(devEmail, subject, message);
 
-               
 
+                }
             }
 
-
-              await _context.SaveChangesAsync();
-
+                await _context.SaveChangesAsync();
+            
         }
     }
 }

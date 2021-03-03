@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,15 +20,18 @@ namespace Phoenix.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IBTProjectService _projectService;
         private readonly IBTRoleService _roleService;
+        private readonly UserManager<BTUser> _userManager;
 
         public ProjectsController(
             ApplicationDbContext context,
             IBTProjectService projectService,
-            IBTRoleService roleService)
+            IBTRoleService roleService,
+            UserManager<BTUser> userManager)
         {
             _context = context;
             _projectService = projectService;
             _roleService = roleService;
+            _userManager = userManager;
         }
         [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> ManageUsersOnProject()
@@ -63,6 +67,25 @@ namespace Phoenix.Controllers
             return RedirectToAction(nameof(Details), new { id = projectId });
         }
 
+        //GET: Project view per user
+        public async Task<IActionResult> MyProjects()
+        {
+            //var model = new List<Project>();
+            var userId = _userManager.GetUserId(User);
+            var model = await _projectService.ListUserProjectsAsync(userId);
+            //model = _context.Projects.Include(p => p.Members).Include(p => p.User);
+            return View(model.ToList());
+        }
+
+        ////Practice adding view list
+        public async Task<IActionResult> ProjectMembers(int? id)
+        {
+           
+            var model = await _projectService.UsersOnProjectAsync(id.Value);
+            
+            return View(model);
+        }
+
 
 
         // GET: Projects
@@ -72,14 +95,6 @@ namespace Phoenix.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        ////Practice adding view list
-        //public async Task<IActionResult> ProjectMembers(int? id)
-        //{
-        //   var model = await _projectService.UsersOnProjectAsync(id.Value);
-
-
-        //    return View(model);
-        //}
 
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -127,7 +142,11 @@ namespace Phoenix.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(project);
-                await _context.SaveChangesAsync();
+                if (!User.IsInRole("DemoUser"))
+                {
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
@@ -170,7 +189,10 @@ namespace Phoenix.Controllers
                 try
                 {
                     _context.Update(project);
-                    await _context.SaveChangesAsync();
+                    if (!User.IsInRole("DemoUser"))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -217,7 +239,10 @@ namespace Phoenix.Controllers
         {
             var project = await _context.Projects.FindAsync(id);
             _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
+            if (!User.IsInRole("DemoUser"))
+            {
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 

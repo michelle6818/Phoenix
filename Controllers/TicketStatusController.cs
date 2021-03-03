@@ -61,7 +61,11 @@ namespace Phoenix.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(ticketStatus);
-                await _context.SaveChangesAsync();
+                if (!User.IsInRole("DemoUser"))
+                {
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(ticketStatus);
@@ -100,7 +104,10 @@ namespace Phoenix.Controllers
                 try
                 {
                     _context.Update(ticketStatus);
-                    await _context.SaveChangesAsync();
+                    if (!User.IsInRole("DemoUser"))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -143,7 +150,10 @@ namespace Phoenix.Controllers
         {
             var ticketStatus = await _context.TicketStatus.FindAsync(id);
             _context.TicketStatus.Remove(ticketStatus);
-            await _context.SaveChangesAsync();
+            if (!User.IsInRole("DemoUser"))
+            {
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 

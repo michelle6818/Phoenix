@@ -81,19 +81,22 @@ namespace Phoenix.Controllers
             {
                 //Use the userId to find the whole user record
                 BTUser user = await _context.Users.FindAsync(userId);
-                    //Make sure the user is not alredy in the role chosen
-                if(!await _roleService.IsUserInRoleAsync(user, roleName))
+                //Make sure the user is not alredy in the role chosen
+                if (!await _roleService.IsUserInRoleAsync(user, roleName))
                 {
                     //Find allthe roles the user currently occupies
                     var userRoles = await _roleService.ListUserRolesAsync(user);
                     //Go through them one at a time
-                    foreach(var role in userRoles)
+                    if (!User.IsInRole("DemoUser"))
                     {
-                        //Remove the user from any and all roles they occupy
-                        await _roleService.RemoveUserFromRoleAsync(user, role);
+                        foreach (var role in userRoles)
+                        {
+                            //Remove the user from any and all roles they occupy
+                            await _roleService.RemoveUserFromRoleAsync(user, role);
+                        }
+                        //Add the user to the chosen role
+                        await _roleService.AddUserToRoleAsync(user, roleName);
                     }
-                    //Add the user to the chosen role
-                    await _roleService.AddUserToRoleAsync(user, roleName);
                 }
             }
             return View();

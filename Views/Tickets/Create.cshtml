@@ -46,19 +46,8 @@
                 <select asp-for="TicketStatusId" class="form-control" asp-items="ViewBag.TicketStatusId"></select>
             </div>
             
-            @*<div class="form-group">
-                <label asp-for="OwnerUserId" class="control-label"></label>
-                <select asp-for="OwnerUserId" class="form-control" value="@user.FullName"></select>
-            </div>*@
-         
-            @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
-            {
-        <div class="form-group">
-            <label asp-for="DeveloperUserId" class="control-label"></label>
-            <select asp-for="DeveloperUserId" class="form-control" asp-items="ViewBag.DeveloperIds"></select>
-            @*<select name="developerIds" multiple="multiple" class="form-control" asp-items="@ViewBag.DeveloperIds"></select>*@
-        </div>
-            }
+           
+       
             <div class="form-group">
                 <input type="submit" value="Submit" class="btn btn-primary" />
             </div>

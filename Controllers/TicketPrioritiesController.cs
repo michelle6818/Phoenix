@@ -61,7 +61,10 @@ namespace Phoenix.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(ticketPriority);
-                await _context.SaveChangesAsync();
+                if (!User.IsInRole("DemoUser"))
+                {
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(ticketPriority);
@@ -100,7 +103,10 @@ namespace Phoenix.Controllers
                 try
                 {
                     _context.Update(ticketPriority);
-                    await _context.SaveChangesAsync();
+                    if (!User.IsInRole("DemoUser"))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -143,7 +149,10 @@ namespace Phoenix.Controllers
         {
             var ticketPriority = await _context.TicketPriorities.FindAsync(id);
             _context.TicketPriorities.Remove(ticketPriority);
-            await _context.SaveChangesAsync();
+            if (!User.IsInRole("DemoUser"))
+            {
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 

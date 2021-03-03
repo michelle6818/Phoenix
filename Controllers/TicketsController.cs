@@ -160,7 +160,11 @@ namespace Phoenix.Controllers
                 ticket.Created = DateTimeOffset.Now;
                 ticket.OwnerUserId = _userManager.GetUserId(User);
                 _context.Add(ticket);
+                if (!User.IsInRole("DemoUser"))
+                {
                 await _context.SaveChangesAsync();
+
+                }
                 return RedirectToAction(nameof(Index));
             }
 
@@ -225,8 +229,12 @@ namespace Phoenix.Controllers
                 try
                 {
                     ticket.Updated = DateTimeOffset.Now;
+
                     _context.Update(ticket);
-                    await _context.SaveChangesAsync();
+                    if (!User.IsInRole("DemoUser"))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
 
                     //Add History
 
@@ -303,7 +311,10 @@ namespace Phoenix.Controllers
         {
             var ticket = await _context.Tickets.FindAsync(id);
             _context.Tickets.Remove(ticket);
-            await _context.SaveChangesAsync();
+            if (!User.IsInRole("DemoUser"))
+            {
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 

@@ -66,7 +66,10 @@ namespace Phoenix.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(ticketHistory);
-                await _context.SaveChangesAsync();
+                if (!User.IsInRole("DemoUser"))
+                {
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description", ticketHistory.TicketId);
@@ -109,7 +112,10 @@ namespace Phoenix.Controllers
                 try
                 {
                     _context.Update(ticketHistory);
-                    await _context.SaveChangesAsync();
+                    if (!User.IsInRole("DemoUser"))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -156,7 +162,10 @@ namespace Phoenix.Controllers
         {
             var ticketHistory = await _context.TicketHistories.FindAsync(id);
             _context.TicketHistories.Remove(ticketHistory);
-            await _context.SaveChangesAsync();
+            if (!User.IsInRole("DemoUser"))
+            {
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 

@@ -10,6 +10,7 @@ using Phoenix.Models.ChartModels;
 namespace Phoenix.Controllers
 {
     [Authorize]
+    
 
     public class ChartsController : Controller
     {
@@ -41,12 +42,12 @@ namespace Phoenix.Controllers
         }
 
         //Chart for priority
-        public JsonResult PriorityChart() 
+        public JsonResult PriorityChart()
         {
             var result = new ChartJSModel();
             var priorities = _context.TicketPriorities.ToList();
             int count = 0;
-            foreach(var priority in priorities)
+            foreach (var priority in priorities)
             {
                 result.Labels.Add(priority.Name);
                 result.Data.Add(_context.Tickets.Where(t => t.TicketPriorityId == priority.Id).Count());
@@ -58,9 +59,9 @@ namespace Phoenix.Controllers
                 {
                     result.BackgroundColors.Add(_backgroundColors[(count % 10)]);
                 };
-                    count++;
+                count++;
             }
-            return Json(result);           
+            return Json(result);
         }
 
         //Chart for Status
@@ -125,4 +126,5 @@ namespace Phoenix.Controllers
         //                    'rgba(153, 102, 255, 1)',
         //                    'rgba(255, 159, 64, 1)']
     }
+  
 }

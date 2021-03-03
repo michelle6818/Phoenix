@@ -68,7 +68,10 @@ namespace Phoenix.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(notification);
-                await _context.SaveChangesAsync();
+                if (!User.IsInRole("DemoUser"))
+                {
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "FullName", notification.RecipientId);
@@ -113,7 +116,10 @@ namespace Phoenix.Controllers
                 try
                 {
                     _context.Update(notification);
-                    await _context.SaveChangesAsync();
+                    if (!User.IsInRole("DemoUser"))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -162,7 +168,10 @@ namespace Phoenix.Controllers
         {
             var notification = await _context.Notifications.FindAsync(id);
             _context.Notifications.Remove(notification);
-            await _context.SaveChangesAsync();
+            if (!User.IsInRole("DemoUser"))
+            {
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 

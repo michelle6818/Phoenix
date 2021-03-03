@@ -37,7 +37,24 @@ namespace Phoenix.Services
                 return await _userManager.GetRolesAsync(user);
             }
 
-            public IEnumerable<IdentityRole> NonDemoRoles()
+
+       
+
+
+        public async Task<string> NonDemoUserRoles(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            var roles = await _userManager.GetRolesAsync(user);
+            var output = "";
+            foreach (var role in roles)
+                if (role != Roles.DemoUser.ToString())
+                {
+                    output = role;
+                }
+            return output;
+        }
+
+        public IEnumerable<IdentityRole> NonDemoRoles()
             {
                 var roles = _context.Roles;
                 var output = new List<IdentityRole>();

@@ -79,7 +79,10 @@ namespace Phoenix.Controllers
                 ticketAttachment.UserId = _userManager.GetUserId(User);
 
                 _context.Add(ticketAttachment);
-                await _context.SaveChangesAsync();
+                if (!User.IsInRole("DemoUser"))
+                {
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction("Details", "Tickets", new { id = ticketAttachment.TicketId });
             }
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description", ticketAttachment.TicketId);
@@ -122,7 +125,10 @@ namespace Phoenix.Controllers
                 try
                 {
                     _context.Update(ticketAttachment);
-                    await _context.SaveChangesAsync();
+                    if (!User.IsInRole("DemoUser"))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -169,7 +175,10 @@ namespace Phoenix.Controllers
         {
             var ticketAttachment = await _context.TicketAttachments.FindAsync(id);
             _context.TicketAttachments.Remove(ticketAttachment);
-            await _context.SaveChangesAsync();
+            if (!User.IsInRole("DemoUser"))
+            {
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 

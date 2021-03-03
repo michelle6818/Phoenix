@@ -68,7 +68,10 @@ namespace Phoenix.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(invite);
-                await _context.SaveChangesAsync();
+                if (!User.IsInRole("DemoUser"))
+                {
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", invite.CompanyId);
@@ -113,7 +116,10 @@ namespace Phoenix.Controllers
                 try
                 {
                     _context.Update(invite);
-                    await _context.SaveChangesAsync();
+                    if (!User.IsInRole("DemoUser"))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -162,7 +168,10 @@ namespace Phoenix.Controllers
         {
             var invite = await _context.Invites.FindAsync(id);
             _context.Invites.Remove(invite);
-            await _context.SaveChangesAsync();
+            if (!User.IsInRole("DemoUser"))
+            {
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 
