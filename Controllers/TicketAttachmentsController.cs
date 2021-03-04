@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,15 @@ namespace Phoenix.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
+        private readonly IEmailSender _emailSender;
 
         public TicketAttachmentsController(ApplicationDbContext context,
-            UserManager<BTUser> userManager)
+            UserManager<BTUser> userManager,
+            IEmailSender emailSender)
         {
             _context = context;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         // GET: TicketAttachments
@@ -66,10 +70,11 @@ namespace Phoenix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FormFile,Image,FileName,FileData,Description,Created,TicketId,UserId")] TicketAttachment ticketAttachment)
+        public async Task<IActionResult> Create([Bind("Id,FormFile,Image,FileName,FileData,Description,Created,TicketId,UserId")] TicketAttachment ticketAttachment, int ticketId, string description)
         {
             if (ModelState.IsValid)
             {
+                var ticket = _context.Tickets.Include(t => t.DeveloperUser).FirstOrDefault(t => t.Id == ticketId);
                 MemoryStream ms = new MemoryStream();
                 await ticketAttachment.FormFile.CopyToAsync(ms);
 
@@ -77,11 +82,26 @@ namespace Phoenix.Controllers
                 ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
                 ticketAttachment.Created = DateTimeOffset.Now;
                 ticketAttachment.UserId = _userManager.GetUserId(User);
-
+                var user = await _userManager.GetUserAsync(User);
                 _context.Add(ticketAttachment);
                 if (!User.IsInRole("DemoUser"))
                 {
                     await _context.SaveChangesAsync();
+                }
+                if (ticketAttachment.UserId != ticket.DeveloperUserId)
+                {
+                    Notification notification = new Notification
+                    {
+                        Created = DateTimeOffset.Now,
+                        RecipientId = ticket.DeveloperUserId,
+                        SenderId = ticketAttachment.UserId,
+                    };
+                    await _context.Notifications.AddAsync(notification);
+                    string devEmail = ticket.DeveloperUser.Email;
+                    string subject = "Ticket Attachment Added";
+                    string message = $"'{ticket.Title}' has a new attachment by {user.FullName}. Description: '{ticketAttachment.Description}.'";
+
+                    await _emailSender.SendEmailAsync(devEmail, subject, message);
                 }
                 return RedirectToAction("Details", "Tickets", new { id = ticketAttachment.TicketId });
             }

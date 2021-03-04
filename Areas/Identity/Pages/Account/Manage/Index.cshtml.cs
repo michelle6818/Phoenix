@@ -33,6 +33,16 @@ namespace Phoenix.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [Required]
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -42,12 +52,16 @@ namespace Phoenix.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            //var firstName = await _userManager.FindByNameAsync(User);
+            //var lastName = await _userManager.FindByNameAsync(User);
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                //FirstName = firstName,
+                //LastName = lastName
             };
         }
 
@@ -78,10 +92,11 @@ namespace Phoenix.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var firstName = await _userManager.GetUserAsync(User);
+            var lastName = await _userManager.GetUserAsync(User);
             if (Input.PhoneNumber != phoneNumber)
             {
-                if (!User.IsInRole("DemoUser"))
-                {
+                
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
@@ -89,7 +104,7 @@ namespace Phoenix.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
 
-                }
+                
             }
 
             await _signInManager.RefreshSignInAsync(user);

@@ -54,21 +54,25 @@
             }
         </dd>
     </dl>
-    <table class="table">
+    @*<table class="table">
         <thead>
             <tr>
             </tr>
         </thead>
-    </table>
+    </table>*@
 </div>
 <div>
-    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager")) {
-        <a asp-action="ManageUsersOnProject" asp-route-id="@Model.Id">Add Team Members</a> 
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> 
-    <a asp-action="Index">Back to List</a>
-    }
-</div>
+    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+    {
+        <a asp-action="ManageUsersOnProject" asp-route-id="@Model.Id">Add Team Members</a>} |
+    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>} |
 
+        <a asp-action="MyProjects">Back to List</a>
+
+    </div>
+<hr />
 
 <table class="table">
     <thead>
@@ -101,7 +105,7 @@
                 Owner User
             </th>
             <th>
-               Developer User
+                Developer User
             </th>
             <th></th>
         </tr>
@@ -141,13 +145,24 @@
                     @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
                 </td>
                 <td>
-                    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager")) { 
-                        <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
-                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Id">Details</a> 
-                    <a asp-controller="Tickets" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                            }
+                    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                    {
+                        <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-controller="Tickets" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+@section Scripts {
+    <script src="//cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+}

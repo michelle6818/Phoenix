@@ -107,6 +107,9 @@ namespace Phoenix.Controllers
             var project = await _context.Projects
                 .Include(m => m.Company)
                 .Include(m => m.Tickets)
+                .Include(m => m.Tickets).ThenInclude(t => t.TicketPriority)
+                .Include(m => m.Tickets).ThenInclude(t => t.TicketStatus)
+                .Include(m => m.Tickets).ThenInclude(t => t.TicketType)
                 .Include(m => m.Members)
                 //.Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
