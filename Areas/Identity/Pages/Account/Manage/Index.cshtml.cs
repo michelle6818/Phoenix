@@ -52,8 +52,8 @@ namespace Phoenix.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            //var firstName = await _userManager.FindByNameAsync(User);
-            //var lastName = await _userManager.FindByNameAsync(User);
+            //var firstName = await _userManager.FindByNameAsync(user);
+            //var lastName = await _userManager.FindByNameAsync(user);
 
             Username = userName;
 
@@ -92,8 +92,8 @@ namespace Phoenix.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            var firstName = await _userManager.GetUserAsync(User);
-            var lastName = await _userManager.GetUserAsync(User);
+            //var firstName = await _userManager.FindByNameAsync(User);
+            //var lastName = await _userManager.GetUserAsync(User);
             if (Input.PhoneNumber != phoneNumber)
             {
                 

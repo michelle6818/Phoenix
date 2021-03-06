@@ -43,7 +43,7 @@ namespace Phoenix.Models
         //Navigation
         public virtual ICollection<BTUser> Members { get; set; }
 
-        //public IList<ProjectUser> ProjectUsers { get; set; }
+      
 
         public virtual ICollection<Ticket> Tickets { get; set; }
 

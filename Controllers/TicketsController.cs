@@ -38,7 +38,7 @@ namespace Phoenix.Controllers
         }
 
         // GET: Tickets
-       
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Tickets
@@ -49,6 +49,28 @@ namespace Phoenix.Controllers
                 .Include(t => t.TicketStatus)
                 .Include(t => t.TicketType);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+
+        public async Task<IActionResult> GoToTicket(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var notification = await _context.Notifications.FindAsync((int)id);
+
+            if (notification == null)
+            {
+                return NotFound();
+            }
+
+            notification.Viewed = true;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = notification.TicketId });
         }
 
         //GET: Ticket view per user
@@ -153,19 +175,22 @@ namespace Phoenix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,DeveloperUserId,DeveloperIds")] Ticket ticket)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Created, Updated, ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,DeveloperUserId,DeveloperIds")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(User);
+                var member = await _projectService.UsersOnProjectAsync(ticket.ProjectId);
                 ticket.Created = DateTimeOffset.Now;
                 ticket.OwnerUserId = _userManager.GetUserId(User);
                 _context.Add(ticket);
-                if (!User.IsInRole("DemoUser"))
+                if (User.IsInRole("Admin") || (User.IsInRole("Submitter") && member.Contains(user)))
                 {
-                await _context.SaveChangesAsync();
-
+                    await _context.SaveChangesAsync();
                 }
-                return RedirectToAction(nameof(Index));
+                
+                    return RedirectToAction(nameof(Index));
+                
             }
 
             var userId = _userManager.GetUserId(User);
@@ -194,6 +219,27 @@ namespace Phoenix.Controllers
             {
                 return NotFound();
             }
+            
+           //Restrict to only people on the project
+            var user = await _userManager.GetUserAsync(User);
+            var notMember = await _projectService.UsersNotOnProjectAsync(ticket.ProjectId);
+            if (notMember.Contains(user)) 
+            {
+                return RedirectToAction("MyTickets");
+            };
+
+            //Block Owners from making changes to tickets that are not theirs
+            if (await _roleService.IsUserInRoleAsync(user, "Submitter") && ticket.OwnerUserId != user.Id)
+            {
+                return RedirectToAction("MyTickets");
+            };
+
+            //Developers cannot change tickets to which they are not assigned
+            if (await _roleService.IsUserInRoleAsync(user, "Developer") && ticket.DeveloperUserId != user.Id)
+            {
+                return RedirectToAction("MyTickets");
+            };
+
             ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
             //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.OwnerUserId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
@@ -224,17 +270,38 @@ namespace Phoenix.Controllers
                 .Include(t => t.DeveloperUser)
                 .AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
 
+               
+               var user = await _userManager.GetUserAsync(User);
+                var notMember = await _projectService.UsersNotOnProjectAsync(ticket.ProjectId);
             if (ModelState.IsValid)
             {
                 try
                 {
+
                     ticket.Updated = DateTimeOffset.Now;
 
                     _context.Update(ticket);
-                    if (!User.IsInRole("DemoUser"))
+                    //Admin can make changes
+                    //Submitter can make changes to tickets they own
+                    if (ticket.OwnerUserId == user.Id)
                     {
                         await _context.SaveChangesAsync();
                     }
+                    else if (User.IsInRole("Admin"))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    //Developers can make changes to their tickets
+                    else if (User.IsInRole("Developer") && (ticket.DeveloperUserId == user.Id))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    //PM can make changes to tickets they manager
+                    else if (await _roleService.IsUserInRoleAsync(user, "ProjectManager") && (!notMember.Contains(user)))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+
 
                     //Add History
 

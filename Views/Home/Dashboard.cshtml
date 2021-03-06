@@ -1,23 +1,23 @@
 ﻿@using Phoenix.Services
 @inject Phoenix.Services.IBTProjectService projectService
 @inject Microsoft.AspNetCore.Identity.UserManager<BTUser> _userManager
-@model Phoenix.Models.ViewModels.DashboardViewModel 
+@model Phoenix.Models.ViewModels.DashboardViewModel
 @*@inject IBTTicketService ticketService*@
 @inject IBTRoleService roleService
 
 @{
     ViewData["Title"] = "Dashboard";
     var user = await _userManager.GetUserAsync(User);
-    var userId = _userManager.GetUserId(User);
-    var roles = await roleService.ListUserRolesAsync(user);
-    string roleName = "";
-    foreach (var role in roles)
-    {
-        if (role != "Demo")
-        {
-            roleName = role;
-        }
-    }
+    //var userId = _userManager.GetUserId(User);
+    //var roles = await roleService.ListUserRolesAsync(user);
+    //string roleName = "";
+    //foreach (var role in roles)
+    //{
+    //    if (role != "Demo")
+    //    {
+    //        roleName = role;
+    //    }
+    //}
 
 }
 <div class="row layout-top-spacing">
@@ -35,7 +35,7 @@
                         <p class="w-value">@Model.Tickets.Where(t => t.TicketPriority.Name == "Urgent").Count()</p>
                         <h5 class="">Critical Tickets</h5>
                     </div>
-                   
+
                 </div>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
@@ -47,7 +47,7 @@
                         <p class="w-value">@Model.Tickets.Where(t => t.DeveloperUser == null).Count()</p>
                         <h5 class="">Unassigned Tickets</h5>
                     </div>
-                
+
                 </div>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
@@ -59,7 +59,7 @@
                         <p class="w-value">@Model.Tickets.Where(t => t.TicketStatus.Name == "New").Count()</p>
                         <h5 class="">New Tickets</h5>
                     </div>
-           
+
                 </div>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
@@ -71,7 +71,7 @@
                         <p class="w-value">@Model.Tickets.Where(t => t.TicketStatus.Name == "Closed").Count()</p>
                         <h5 class="">Resolved Tickets</h5>
                     </div>
-                 
+
                 </div>
             </div>
         </div>
@@ -89,15 +89,50 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
-            <canvas id="myChart2" width="400" height="400"></canvas>
+ <div class="row">
+  <div class="col">
+         <canvas id="myChart2" width="400" height="400"></canvas>
         </div>
     </div>
 
-
-
-
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="widget-content widget-content-area br-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title mb-0">Phoenix Projects</h6>
+                        </div>
+                        <div class="table-responsive mb-4 mt-4">
+                            <table id="zero-config" class="table table-hover" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Member Count</th>
+                                        <th>Ticket Count</th>
+                                        <th>Company Id</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var ticket in Model.Projects)
+                                    {
+                                        <tr>
+                                            <td>@ticket.Name</td>
+                                            <td>@ticket.Members.Count</td>
+                                            <td>@ticket.Tickets.Count</td>
+                                            <td>@ticket.Company.Name</td>
+                                            <td>@ticket.Description</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--<div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
         <div class="widget widget-activity-three">
@@ -202,63 +237,87 @@
             </div>
         </div>
     </div>-->
-
-    
     @*<div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-        <div class="widget widget-five">
-            <div class="widget-content">
+            <div class="widget widget-five">
+                <div class="widget-content">
 
-                <div class="header">
-                    <div class="header-body">
-                        <h6>Pending Tasks</h6>
-                        <p class="meta-date">Nov 2019</p>
-                    </div>
-                    <div class="task-action">
-                        <div class="dropdown  custom-dropdown">
-                            <a class="dropdown-toggle" href="#" role="button" id="pendingTask" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                            </a>
+                    <div class="header">
+                        <div class="header-body">
+                            <h6>Pending Tasks</h6>
+                            <p class="meta-date">Nov 2019</p>
+                        </div>
+                        <div class="task-action">
+                            <div class="dropdown  custom-dropdown">
+                                <a class="dropdown-toggle" href="#" role="button" id="pendingTask" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                                </a>
 
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="pendingTask">
-                                <a class="dropdown-item" href="javascript:void(0);">Add</a>
-                                <a class="dropdown-item" href="javascript:void(0);">View</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Update</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Clear All</a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="pendingTask">
+                                    <a class="dropdown-item" href="javascript:void(0);">Add</a>
+                                    <a class="dropdown-item" href="javascript:void(0);">View</a>
+                                    <a class="dropdown-item" href="javascript:void(0);">Update</a>
+                                    <a class="dropdown-item" href="javascript:void(0);">Clear All</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="w-content">
-                    <div class="">
-                        <p class="task-left">8</p>
-                        <p class="task-completed"><span>12 Done</span></p>
-                        <p class="task-hight-priority"><span>3 Task</span> with High priotity</p>
+                    <div class="w-content">
+                        <div class="">
+                            <p class="task-left">8</p>
+                            <p class="task-completed"><span>12 Done</span></p>
+                            <p class="task-hight-priority"><span>3 Task</span> with High priotity</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div>*@
+        </div>*@
 
-  
+
 
 </div>
-    @*Footer*@
-    <div class="footer-wrapper">
-        <div class="footer-section f-section-1">
-            <p class="">Copyright © 2021 <a target="_blank" href="https://designreset.com">Phoenix Issue Tracker</a>, All rights reserved.</p>
-        </div>
-        <div class="footer-section f-section-2">
-            <p class="">Coded with <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></p>
-        </div>
+@*Footer*@
+<div class="footer-wrapper">
+    <div class="footer-section f-section-1">
+        <p class="">Copyright © 2021 <a target="_blank" href="https://designreset.com">Phoenix Issue Tracker</a>, All rights reserved.</p>
     </div>
+    <div class="footer-section f-section-2">
+        <p class="">Coded with <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></p>
+    </div>
+</div>
 
-    @section Scripts {
-        <script src="//cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+@section Scripts {
+    <script src="//cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="~/assets/js/libs/jquery-3.1.1.min.js"></script>
+    <script src="~/bootstrap/js/popper.min.js"></script>
+    <script src="~/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="~/assets/js/app.js"></script>
+    <script>
+        $(document).ready(function () {
+            App.init();
+        });
+    </script>
+    <script src="~/assets/js/custom.js"></script>
+    <script src="~/plugins/table/datatable/datatables.js"></script>
+    <script>
+        $('#zero-config').DataTable({
+            "oLanguage": {
+                "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+                "sInfo": "Showing page _PAGE_ of _PAGES_",
+                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                "sSearchPlaceholder": "Search...",
+                "sLengthMenu": "Results :  _MENU_",
+            },
+            "stripeClasses": [],
+            "lengthMenu": [7, 10, 20, 50],
+            "pageLength": 7
+        });
+    </script>
 
-       @*Chart 1 Bar Chart*@
-<script>
+    @*Chart 1 Bar Chart*@
+    <script>
            var Url3 = '@Url.Action("StatusChart", "Charts")';
              $.post(Url3).then(function (response) {
                  var ctx = document.getElementById('myChart').getContext('2d');
@@ -273,7 +332,7 @@
                  };
                  var myChart = new Chart(ctx, {
                      type: 'bar',
-                     data: barChartData                   
+                     data: barChartData
                 })
                 //options: {
                 //    scales: {
@@ -286,10 +345,10 @@
                 //}
 
             });
-</script>
+    </script>
 
-       @*Chart 2 PolarArea Chart*@
-<script>
+    @*Chart 2 PolarArea Chart*@
+    <script>
             var Url2 = '@Url.Action("TypeChart", "Charts")';
              $.post(Url2).then(function (response) {
              var ctx = document.getElementById('myChart2').getContext('2d');
@@ -308,10 +367,10 @@
                          data: polarChartData
                      })
                  });
-</script>
+    </script>
 
-         @*Chart 3 Doughnut Chart*@
-        <script>
+    @*Chart 3 Doughnut Chart*@
+    <script>
             //Step 1 generate the Url that we will call to get JSON
             var Url1 = '@Url.Action("PriorityChart", "Charts")'; //represents the endpoint ( action + controller) that we want to hit
 
@@ -334,6 +393,6 @@
                     data: doughnutChartData
                 })
             });
-         </script>
+    </script>
 
-    }
+}
