@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -73,6 +74,17 @@ namespace Phoenix.Controllers
             return RedirectToAction("Details", new { id = notification.TicketId });
         }
 
+        //Show attachments
+        public IActionResult ShowFile(int id)
+        {
+            TicketAttachment ticketAttachment = _context.TicketAttachments.Find(id);
+            string fileName = ticketAttachment.FileName;
+            byte[] fileData = ticketAttachment.FileData;
+            string ext = Path.GetExtension(fileName).Replace(".", "");
+
+            Response.Headers.Add("Content-Disposition", $"inline; filename={fileName}");
+            return File(fileData, $"application/{ext}");
+        }
         //GET: Ticket view per user
         public async Task<IActionResult> MyTickets()
         {
