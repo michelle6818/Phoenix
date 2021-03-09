@@ -306,7 +306,7 @@ select.form-control.form-custom {
   width: 100%;
   height: calc(2.25rem + 2px);
   vertical-align: middle;
-  background: #fff url(../img/arrow-down.png) no-repeat right 0.75rem center;
+  background: #0e1726 url(../img/arrow-down.png) no-repeat right 0.75rem center;
   background-size: 13px 14px;
   -webkit-appearance: none;
   -moz-appearance: none;

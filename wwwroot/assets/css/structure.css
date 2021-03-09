@@ -687,9 +687,9 @@ code {
     border-top-right-radius: 4px;
     margin-right: -12px;
     margin-left: -12px;
-    background: #8989ba;
+    background: #e0e6ed;
     margin-top: -1px;
-    background-image: linear-gradient(to top, #a7a6cb 0%, #8989ba 52%, #8989ba 100%); }
+    background-image: linear-gradient(to top, #a7a6cb 0%, #e0e6ed 52%, #e0e6ed 100%); }
     .navbar .navbar-item .nav-item.user-profile-dropdown .dropdown-menu .user-profile-section .media {
       margin: 0; }
       .navbar .navbar-item .nav-item.user-profile-dropdown .dropdown-menu .user-profile-section .media img {

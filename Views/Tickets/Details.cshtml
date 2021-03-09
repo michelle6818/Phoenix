@@ -81,174 +81,179 @@
 </div>
 
 <h4>Comments</h4>
-<form asp-controller="TicketComments" asp-action="Create">
-    <div class="container">
-        <div class="row">
-            <div class="col-md">
-                <input type="hidden" value="@Model.Id" asp-for="@Model.Comments.FirstOrDefault().TicketId" />
-                @Html.Hidden("TicketId", Model.Id)
-                @Html.Hidden("UserId", User)
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label class="control-label">Ticket Comments</label>
-                    @*<input asp-for="@Model.Comments.FirstOrDefault().TicketId" class="form-control" />*@
-                    <textarea required name="Comment" class="form-control"></textarea>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-success">
+@if (!User.IsInRole("DemoUser"))
+{
+    <form asp-controller="TicketComments" asp-action="Create">
+        <div class="container">
+            <div class="row">
+                <div class="col-md">
+                    <input type="hidden" value="@Model.Id" asp-for="@Model.Comments.FirstOrDefault().TicketId" />
+                    @Html.Hidden("TicketId", Model.Id)
+                    @Html.Hidden("UserId", User)
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label class="control-label">Ticket Comments</label>
+                        @*<input asp-for="@Model.Comments.FirstOrDefault().TicketId" class="form-control" />*@
+                        <textarea required name="Comment" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-success">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
-
-<div class="row">
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-               Comment
-            </th>
-            <th>
-                Created
-            </th>
-            <th>
-                Ticket
-            </th>
-            <th>
-                User
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Comments.OrderByDescending(c => c.Created))
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ticket.Description)
-                </td>
-                <td>
-                    @item.User.FullName
-                </td>
-                <td>
-                    <a asp-controller="TicketComments" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-controller="TicketComments" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-controller="TicketComments" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-</div>
-
-<hr />
-@*Ticket Attachments*@
-<h4>Attachments</h4>
-<div class="row clearfix">
-    @foreach (TicketAttachment item in Model.Attachments.OrderByDescending(c => c.Created))
-    {
-     <div class="col-sm-2">
-        <div class="card">
-          <div class="file">
-            <a href="javascript:void(0);">
-                <div class="hover">
-                    <button type="button" class="btn btn-icon btn-danger">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </div>
-                <div class="icon">
-                    <img src="@BTFileService.GetFileIcon(item.FileName)" style="height:60px;width:60px" />
-                </div>
-                <div class="file-name">
-                    <p class="m-b-5 text-muted">@System.IO.Path.GetFileNameWithoutExtension(item.FileName)</p>
-                    <small>Size: @BTFileService.FormatFileSize(item.FileData.Length) <span class="date text-muted">@item.Created.ToString("MMM dd, yyyy")</span></small>
-                </div>
-            </a>
-          </div>
-        </div>
-     </div>
-    }
-</div>
-    <div>
-        <form asp-action="Create" asp-controller="TicketAttachments" enctype="multipart/form-data" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="@Model.Id" name="TicketId">
-
-            <div class="media-body ml-3">
-                <label class="form-label d-block mb-2">Add Attachment</label>
-                <label>
-                    Description
-                    <input asp-for="@Model.Attachments.FirstOrDefault().Description" type="text" class="form-control" />
-                </label><br />
-                <label class="btn btn-outline-primary btn-sm">
-                    <input asp-for="@Model.Attachments.FirstOrDefault().FormFile" type="file" />
-                </label>
-                <button type="submit" class="btn btn-outline-secondary btn-sm md-btn-flat">Submit</button>
-            </div>
-        </form>
-    </div>
-
-<hr />
-@*Ticket History*@
-<h4>History</h4>
-<div class="row">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Property Name
-                </th>
-                <th>
-                    Old Value
-                </th>
-                <th>
-                    New Value
-                </th>
-                <th>
-                    Created
-                </th>
-                <th>
-                    Ticket
-                </th>
-                <th>
-                    User
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Histories.OrderByDescending(c => c.Created))
-            {
+    </form>
+}
+    <div class="row">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Property)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OldValue)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NewValue)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Created)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Ticket.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.User.FullName)
-                    </td>
-                   
+                    <th>
+                        Comment
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Ticket
+                    </th>
+                    <th>
+                        User
+                    </th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Comments.OrderByDescending(c => c.Created))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Comment)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Created)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ticket.Description)
+                        </td>
+                        <td>
+                            @item.User.FullName
+                        </td>
+                        <td>
+                            <a asp-controller="TicketComments" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-controller="TicketComments" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-controller="TicketComments" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-</div>
+    <hr />
+    @*Ticket Attachments*@
+    <h4>Attachments</h4>
+    <div class="row clearfix">
+        @foreach (TicketAttachment item in Model.Attachments.OrderByDescending(c => c.Created))
+        {
+            <div class="col-sm-2">
+                <div class="card">
+                    <div class="file">
+                        <a href="javascript:void(0);">
+                            <div class="hover">
+                                <button type="button" class="btn btn-icon btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                            <div class="icon">
+                                <img src="@BTFileService.GetFileIcon(item.FileName)" style="height:60px;width:60px" />
+                            </div>
+                            <div class="file-name">
+                                <p class="m-b-5 text-muted">@System.IO.Path.GetFileNameWithoutExtension(item.FileName)</p>
+                                <small>Size: @BTFileService.FormatFileSize(item.FileData.Length) <span class="date text-muted">@item.Created.ToString("MMM dd, yyyy")</span></small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div>
+        @if (!User.IsInRole("DemoUser"))
+        {
+            <form asp-action="Create" asp-controller="TicketAttachments" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="@Model.Id" name="TicketId">
+
+                <div class="media-body ml-3">
+                    <label class="form-label d-block mb-2">Add Attachment</label>
+                    <label>
+                        Description
+                        <input asp-for="@Model.Attachments.FirstOrDefault().Description" type="text" class="form-control" />
+                    </label><br />
+                    <label class="btn btn-outline-primary btn-sm">
+                        <input asp-for="@Model.Attachments.FirstOrDefault().FormFile" type="file" />
+                    </label>
+                    <button type="submit" class="btn btn-outline-secondary btn-sm md-btn-flat">Submit</button>
+                </div>
+            </form>
+        }
+        </div>
+
+    <hr />
+    @*Ticket History*@
+    <h4>History</h4>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Property Name
+                    </th>
+                    <th>
+                        Old Value
+                    </th>
+                    <th>
+                        New Value
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Ticket
+                    </th>
+                    <th>
+                        User
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Histories.OrderByDescending(c => c.Created))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Property)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OldValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NewValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Created)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ticket.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.FullName)
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>

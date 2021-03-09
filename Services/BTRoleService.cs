@@ -38,9 +38,6 @@ namespace Phoenix.Services
             }
 
 
-       
-
-
         public async Task<string> NonDemoUserRoles(string userId)
         {
             var user = await _context.Users.FindAsync(userId);

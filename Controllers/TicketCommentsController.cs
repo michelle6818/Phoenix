@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Phoenix.Data;
 using Phoenix.Models;
+using Phoenix.Services;
 
 namespace Phoenix.Controllers
 {
@@ -19,14 +20,20 @@ namespace Phoenix.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IBTProjectService _projectService;
+        private readonly IBTRoleService _roleService;
 
         public TicketCommentsController(ApplicationDbContext context,
             UserManager<BTUser> userManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IBTProjectService projectService,
+            IBTRoleService roleService)
         {
             _context = context;
             _userManager = userManager;
             _emailSender = emailSender;
+            _projectService = projectService;
+            _roleService = roleService;
         }
 
         // GET: TicketComments
@@ -69,16 +76,26 @@ namespace Phoenix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
         public async Task<IActionResult> Create([Bind("Id,Comment,Created,TicketId")] TicketComment ticketComment, int ticketId, string content)
         {
+            if (User.IsInRole("DemoUser"))
+            {
+                return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
+            }
             if (ModelState.IsValid)
             {
                 var ticket = _context.Tickets.Include(t => t.DeveloperUser).FirstOrDefault(t => t.Id == ticketId);
                 ticketComment.Created = DateTime.Now;
                 ticketComment.UserId = _userManager.GetUserId(User);
                 var user = await _userManager.GetUserAsync(User);
+                var member = await _projectService.UsersOnProjectAsync(ticket.ProjectId);
                 _context.Add(ticketComment);
-                if (!User.IsInRole("DemoUser"))
+                if (ticket.OwnerUserId == user.Id || ticket.DeveloperUserId == user.Id || User.IsInRole("Admin"))
+                {
+                    await _context.SaveChangesAsync();
+                }
+                else if (await _roleService.IsUserInRoleAsync(user, "ProjectManager") && (member.Contains(user)))
                 {
                     await _context.SaveChangesAsync();
                 }

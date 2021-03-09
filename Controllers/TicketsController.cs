@@ -38,7 +38,7 @@ namespace Phoenix.Controllers
         }
 
         // GET: Tickets
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Tickets
@@ -162,8 +162,8 @@ namespace Phoenix.Controllers
             var userProjects = await _projectService.ListUserProjectsAsync(userId);
 
             ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
-            //ViewData["ProjectId"] = new SelectList(userProjects, "Id", "Name");
+            //ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
+            ViewData["ProjectId"] = new SelectList(userProjects, "Id", "Name");
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
             ViewData["TicketStatusId"] = new SelectList(_context.TicketStatus, "Id", "Name");
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
@@ -188,17 +188,17 @@ namespace Phoenix.Controllers
                 {
                     await _context.SaveChangesAsync();
                 }
-                
-                    return RedirectToAction(nameof(Index));
-                
+
+                return RedirectToAction("MyTickets");
+
             }
 
             var userId = _userManager.GetUserId(User);
             var userProjects = await _projectService.ListUserProjectsAsync(userId);
 
             ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
-            //ViewData["ProjectId"] = new SelectList(userProjects, "Id", "Name", ticket.ProjectId);
+            //ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
+            ViewData["ProjectId"] = new SelectList(userProjects.ToString(), "Id", "Name", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketStatusId"] = new SelectList(_context.TicketStatus, "Id", "Name", ticket.TicketStatusId);
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
@@ -220,25 +220,25 @@ namespace Phoenix.Controllers
                 return NotFound();
             }
             
-           //Restrict to only people on the project
-            var user = await _userManager.GetUserAsync(User);
-            var notMember = await _projectService.UsersNotOnProjectAsync(ticket.ProjectId);
-            if (notMember.Contains(user)) 
-            {
-                return RedirectToAction("MyTickets");
-            };
+           ////Restrict to only people on the project
+           // var user = await _userManager.GetUserAsync(User);
+           // var notMember = await _projectService.UsersNotOnProjectAsync(ticket.ProjectId);
+           // if (notMember.Contains(user)) 
+           // {
+           //     return RedirectToAction("MyTickets");
+           // };
 
-            //Block Owners from making changes to tickets that are not theirs
-            if (await _roleService.IsUserInRoleAsync(user, "Submitter") && ticket.OwnerUserId != user.Id)
-            {
-                return RedirectToAction("MyTickets");
-            };
+           // //Block Owners from making changes to tickets that are not theirs
+           // if (await _roleService.IsUserInRoleAsync(user, "Submitter") && ticket.OwnerUserId != user.Id)
+           // {
+           //     return RedirectToAction("MyTickets");
+           // };
 
-            //Developers cannot change tickets to which they are not assigned
-            if (await _roleService.IsUserInRoleAsync(user, "Developer") && ticket.DeveloperUserId != user.Id)
-            {
-                return RedirectToAction("MyTickets");
-            };
+           // //Developers cannot change tickets to which they are not assigned
+           // if (await _roleService.IsUserInRoleAsync(user, "Developer") && ticket.DeveloperUserId != user.Id)
+           // {
+           //     return RedirectToAction("MyTickets");
+           // };
 
             ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
             //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.OwnerUserId);
@@ -301,7 +301,10 @@ namespace Phoenix.Controllers
                     {
                         await _context.SaveChangesAsync();
                     }
-
+                    else
+                    {
+                        return RedirectToAction("MyTickets");
+                    }
 
                     //Add History
 
@@ -321,7 +324,7 @@ namespace Phoenix.Controllers
                     await _historyService.AddHistoryAsync(oldTicket, newTicket, userId);
                     //await _context.SaveChangesAsync();
 
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("MyTickets");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -372,6 +375,7 @@ namespace Phoenix.Controllers
         }
 
         // POST: Tickets/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

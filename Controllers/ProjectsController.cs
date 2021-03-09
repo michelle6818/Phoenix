@@ -89,6 +89,7 @@ namespace Phoenix.Controllers
 
 
         // GET: Projects
+        [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Projects.Include(p => p.Company);

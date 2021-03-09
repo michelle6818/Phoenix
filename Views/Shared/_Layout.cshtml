@@ -67,7 +67,6 @@
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span class="badge badge-success">@((await notificationService.GetUnreadNotificationsAsync(User)).Count())</span>
                 </a>
-                @*<h6 class="">@((await notificationService.GetUnreadNotificationsAsync(User)).Count()) </h6>*@
                 <div class="dropdown-menu position-absolute animated fadeInUp" aria-labelledby="notificationDropdown">
                     <div class="notification-scroll">
                         @foreach (var notification in (await notificationService.GetUnreadNotificationsAsync(User)))
@@ -107,12 +106,15 @@
                         <div class="user-profile-section">
                             @*<div class="media mx-auto">*@
                             @*<img src="assets/img/90x90.jpg" class="img-fluid mr-2" alt="avatar">*@
-                            @*<div class="media-body">
-                                <h5>Sonia Shaw</h5>
-                                <p>Project Leader</p>
+                            <div class="media-body">
+                                <h5>@user.FullName</h5>
+                                @foreach (var role in await _userManager.GetRolesAsync(user))
+                                {
+                                    <p>@role</p>
+                                }
                             </div>
-                        </div>*@
                         </div>
+                        @*</div>*@
                         <div class="dropdown-item">
                             <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> <span>My Profile</span>
@@ -250,14 +252,17 @@
                             </div>
                         </a>
                         <ul class="collapse submenu list-unstyled" id="components" data-parent="#accordionExample">
+                            @if (User.IsInRole("Admin") || User.IsInRole("Submitter"))
+                            {
                             <li>
                                 <a asp-area="" asp-controller="Tickets" asp-action="Create"> Submit Ticket </a>
                             </li>
+                            }
                             @if (User.IsInRole("Admin"))
-                                { 
-                            <li>
-                                <a asp-area="" asp-controller="Tickets" asp-action="Index"> All Tickets  </a>
-                            </li>
+                            {
+                                <li>
+                                    <a asp-area="" asp-controller="Tickets" asp-action="Index"> All Tickets  </a>
+                                </li>
                             }
                             <li>
                                 <a asp-area="" asp-controller="Tickets" asp-action="MyTickets"> My Tickets </a>

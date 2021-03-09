@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Phoenix.Data;
 using Phoenix.Models;
 
 namespace Phoenix.Areas.Identity.Pages.Account.Manage
@@ -14,13 +15,16 @@ namespace Phoenix.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<BTUser> _userManager;
         private readonly SignInManager<BTUser> _signInManager;
+        private readonly ApplicationDbContext _context;
 
         public IndexModel(
             UserManager<BTUser> userManager,
-            SignInManager<BTUser> signInManager)
+            SignInManager<BTUser> signInManager,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         public string Username { get; set; }
@@ -52,16 +56,20 @@ namespace Phoenix.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            //var firstName = await _userManager.FindByNameAsync(user);
-            //var lastName = await _userManager.FindByNameAsync(user);
+            var name = await _userManager.GetUserAsync(User);
+            var firstName = name.FirstName;
+            var lastName = name.LastName;
+            //var firstName = await _userManager.GetUserNameAsync();
+            //var lastName = await _userManager.GetUserNameAsync(user);
 
             Username = userName;
 
             Input = new InputModel
             {
+                
                 PhoneNumber = phoneNumber,
-                //FirstName = firstName,
-                //LastName = lastName
+                FirstName =  firstName,
+                LastName = lastName
             };
         }
 
@@ -92,15 +100,20 @@ namespace Phoenix.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            //var firstName = await _userManager.FindByNameAsync(User);
-            //var lastName = await _userManager.GetUserAsync(User);
-            if (Input.PhoneNumber != phoneNumber)
+           
+            var firstName = user.FirstName;
+            var lastName = user.LastName;
+
+            if (Input.PhoneNumber != phoneNumber || Input.FirstName != firstName || Input.LastName != lastName)
             {
                 
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                await _context.SaveChangesAsync();
                 if (!setPhoneResult.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage = "Unexpected error when trying to set new data.";
                     return RedirectToPage();
                 }
 

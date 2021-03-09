@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Phoenix.Data;
 using Phoenix.Models;
+using Phoenix.Services;
 
 namespace Phoenix.Controllers
 {
@@ -20,14 +21,20 @@ namespace Phoenix.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IBTProjectService _projectService;
+        private readonly IBTRoleService _roleService;
 
         public TicketAttachmentsController(ApplicationDbContext context,
             UserManager<BTUser> userManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IBTProjectService projectService,
+            IBTRoleService roleService)
         {
             _context = context;
             _userManager = userManager;
             _emailSender = emailSender;
+            _projectService = projectService;
+            _roleService = roleService;
         }
 
         // GET: TicketAttachments
@@ -70,8 +77,13 @@ namespace Phoenix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
         public async Task<IActionResult> Create([Bind("Id,FormFile,Image,FileName,FileData,Description,Created,TicketId,UserId")] TicketAttachment ticketAttachment, int ticketId, string description)
         {
+            if (User.IsInRole("DemoUser"))
+            {
+                return RedirectToAction("Details", "Tickets", new { id = ticketAttachment.TicketId });
+            }
             if (ModelState.IsValid)
             {
                 var ticket = _context.Tickets.Include(t => t.DeveloperUser).FirstOrDefault(t => t.Id == ticketId);
@@ -83,11 +95,18 @@ namespace Phoenix.Controllers
                 ticketAttachment.Created = DateTimeOffset.Now;
                 ticketAttachment.UserId = _userManager.GetUserId(User);
                 var user = await _userManager.GetUserAsync(User);
+                var member = await _projectService.UsersOnProjectAsync(ticket.ProjectId);
                 _context.Add(ticketAttachment);
-                if (!User.IsInRole("DemoUser"))
+                if (ticket.OwnerUserId == user.Id || ticket.DeveloperUserId == user.Id || User.IsInRole("Admin"))
                 {
                     await _context.SaveChangesAsync();
                 }
+                else if (await _roleService.IsUserInRoleAsync(user, "ProjectManager") && (member.Contains(user)))
+                {
+                    await _context.SaveChangesAsync();
+                }
+               
+
                 if (ticketAttachment.UserId != ticket.DeveloperUserId)
                 {
                     Notification notification = new Notification

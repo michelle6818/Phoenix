@@ -18,13 +18,13 @@
     <div class="row mt-2">
         <div class="col">
             <div class="card bg-light-primary">
-                <div class="card-body">
+                <div class="card-body" >
                     @*<div class="col-4">*@
-                        <select name="userIds" multiple="multiple" asp-items="@users"></select>
+                        <select name="userIds" style="width:75%"  class="form-control" multiple="multiple" asp-items="@users"></select>
                     </div>
                 <div class="card-body">
                     @*<div class="col-4">*@
-                        <select name="roleName" asp-items="@roles"></select>
+                        <select name="roleName" style="width:75%" class="form-control" asp-items="@roles"></select>
                     </div>
                
                 <div class="row">
