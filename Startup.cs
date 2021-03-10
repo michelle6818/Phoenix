@@ -47,6 +47,7 @@ namespace Phoenix
             services.AddScoped<IBTHistoryService, BTHistoryService>();
             services.AddScoped<IBTFileService, BTFileService>();
             services.AddScoped<IBTNotificationService, BTNotificationService>();
+            services.AddScoped<IBTInviteService, BTInviteService>();
 
             //Email
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));

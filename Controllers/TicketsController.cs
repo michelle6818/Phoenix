@@ -24,20 +24,42 @@ namespace Phoenix.Controllers
         private readonly IBTHistoryService _historyService;
         private readonly IBTProjectService _projectService;
         private readonly IBTRoleService _roleService;
+        private readonly SignInManager<BTUser> _signInManager;
 
         public TicketsController(ApplicationDbContext context, 
             UserManager<BTUser> userManager, 
             IBTHistoryService historyService,
             IBTProjectService projectService,
-            IBTRoleService roleService)
+            IBTRoleService roleService,
+            SignInManager<BTUser> signInManager)
         {
             _context = context;
             _userManager = userManager;
             _historyService = historyService;
             _projectService = projectService;
             _roleService = roleService;
+            _signInManager = signInManager;
         }
 
+        public async Task<IActionResult> AcceptInvite(string userId, string code)
+        {
+            var realGuid = Guid.Parse(code);
+            var invite = _context.Invites.FirstOrDefault(i => i.CompanyToken == realGuid && i.InviteeId == userId);
+            if(invite is null)
+            {
+                return NotFound();
+            }
+            if(invite.IsValid)
+            {
+                invite.IsValid = false;
+                var user = await _context.Users.FindAsync(userId);
+               await _signInManager.SignInAsync(user, isPersistent: false);
+                var roles = await _userManager.GetRolesAsync(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Create");
+            }
+            return NotFound();
+        }
         // GET: Tickets
         [Authorize]
         public async Task<IActionResult> Index()
