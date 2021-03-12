@@ -8,50 +8,51 @@
 
 
 
-<h4>Submit a New Ticket</h4>
-<hr />
- 
-<div class="row">
-    <div class="col-md-4">
+<div class="row justify-content-center">
+    <div class="col-md-6 mt-2 widget widget-one_hybrid widget-followers p-5 mt-2">
+        <h1 class="newTicket">Submit a new ticket</h1>
+        <hr />
         @if (User.Identity.IsAuthenticated)
         {
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Created" value="@DateTime.Now" />
-            <input type="hidden" asp-for="Created" value="@user.FullName" />
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>                     
-            <div class="form-group">
-                <label asp-for="ProjectId" class="control-label"></label>
-                <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TicketTypeId" class="control-label"></label>
-                <select asp-for="TicketTypeId" class="form-control" asp-items="ViewBag.TicketTypeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TicketPriorityId" class="control-label"></label>
-                <select asp-for="TicketPriorityId" class="form-control" asp-items="ViewBag.TicketPriorityId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TicketStatusId" class="control-label"></label>
-                <select asp-for="TicketStatusId" class="form-control" asp-items="ViewBag.TicketStatusId"></select>
-            </div>
-            
-           
-       
-            <div class="form-group">
-                <input type="submit" value="Submit" class="btn btn-primary" />
-            </div>
-        </form>
+    <form asp-action="Create" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Created" value="@DateTime.Now" />
+        <input type="hidden" asp-for="Created" value="@user.FullName" />
+
+        <div class="newTicket mb-3">
+            <label asp-for="Title" class="newTicket"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="newTicket mb-3">
+            <label asp-for="Description" class="newTicket"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="newTicket mb-3">
+            <label for="ProjectId" class="newTicket">Project</label>
+            <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
+        </div>
+        <div class="newTicket mb-3">
+            <label for="TicketTypeId" class="newTicket">Ticket Type</label>
+            <select asp-for="TicketTypeId" class="form-control" asp-items="ViewBag.TicketTypeId"></select>
+        </div>
+        <div class="newTicket mb-3">
+            <label for="TicketPriorityId" class="newTicket">Ticket Priority</label>
+            <select asp-for="TicketPriorityId" class="form-control" asp-items="ViewBag.TicketPriorityId"></select>
+        </div>
+        <div class="newTicket mb-3">
+            <label for="TicketStatusId" class="newTicket">Ticket Status</label>
+            <select asp-for="TicketStatusId" class="form-control" asp-items="ViewBag.TicketStatusId"></select>
+        </div>
+        <div class="form-group mb-5">
+            <label for="FileName" class="control-label"></label><br />
+            <input name="attachment" type="file" /> 
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </div>
+    </form>
         }
     </div>
 </div>

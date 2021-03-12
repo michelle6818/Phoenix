@@ -1,0 +1,38 @@
+.newTicket {
+  color: #1B55E2;
+  font-weight:bold;
+}
+.form-group {
+    color: #1B55E2;
+    font-weight:bold;
+}
+.control-label {
+    color: #1B55E2;
+    font-weight: bold;
+}
+.sidebar-theme {
+    background: #eaf1ff;
+}
+.sidebar-wrapper sidebar-theme{
+    background: #eaf1ff;
+}
+.sidebar-wrapper .profile-info {
+    position: relative;
+    padding-bottom: 0;
+    background: #eaf1ff;
+}
+.sidebar-wrapper .profile-info .user-info p {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0;
+    opacity: 1;
+    color: #eaf1ff;
+}
+.black {
+    color: #3B3F5C;
+    font-weight:bold;
+}
+.span {
+    color: #1B55E2;
+    font-weight: bold;
+}

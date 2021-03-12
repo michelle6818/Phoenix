@@ -12,10 +12,10 @@ html {
   min-height: 100%; }
 
 body {
-  color: #888ea8;
+  color: #445ede;
   height: 100%;
   font-size: 0.875rem;
-  background: #f1f2f3;
+  background: #445ede;
   overflow-x: hidden;
   overflow-y: auto;
   letter-spacing: 0.0312rem;
@@ -817,10 +817,10 @@ code {
       opacity: 1; }
     .sidebar-wrapper .profile-info .user-info p {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0;
       opacity: 1;
-      color: #888ea8; }
+      color: #3b3f5c; }
 
 #sidebar .theme-brand li.theme-logo {
   align-self: center; }
