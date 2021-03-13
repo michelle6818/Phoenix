@@ -73,6 +73,14 @@ namespace Phoenix.Controllers
             //var model = new List<Project>();
             var userId = _userManager.GetUserId(User);
             var model = await _projectService.ListUserProjectsAsync(userId);
+            var tickets = _context.Tickets
+                .Include(t => t.TicketStatus)
+                .Include(t => t.TicketPriority)
+                .ToList();
+            var projects = _context.Projects
+                .Include(p => p.Company)
+                .Include(p => p.Members)
+                .ToList();
             //model = _context.Projects.Include(p => p.Members).Include(p => p.User);
             return View(model.ToList());
         }
