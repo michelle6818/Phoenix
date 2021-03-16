@@ -218,11 +218,13 @@ namespace Phoenix.Controllers
                 ticket.Created = DateTimeOffset.Now;
                 ticket.OwnerUserId = _userManager.GetUserId(User);
                 _context.Add(ticket);
-                if (User.IsInRole("Admin") || (User.IsInRole("Submitter") && member.Contains(user)))
+                if (!User.IsInRole("Demo"))
                 {
-                    await _context.SaveChangesAsync();
+                    if (User.IsInRole("Admin") || (User.IsInRole("Submitter") && member.Contains(user)))
+                    {
+                        await _context.SaveChangesAsync();
+                    }
                 }
-
                 return RedirectToAction("MyTickets");
 
             }
