@@ -2,22 +2,12 @@
 @inject Phoenix.Services.IBTProjectService projectService
 @inject Microsoft.AspNetCore.Identity.UserManager<BTUser> _userManager
 @model Phoenix.Models.ViewModels.DashboardViewModel
-@*@inject IBTTicketService ticketService*@
 @inject IBTRoleService roleService
 
 @{
     ViewData["Title"] = "Dashboard";
     var user = await _userManager.GetUserAsync(User);
-    //var userId = _userManager.GetUserId(User);
-    //var roles = await roleService.ListUserRolesAsync(user);
-    //string roleName = "";
-    //foreach (var role in roles)
-    //{
-    //    if (role != "Demo")
-    //    {
-    //        roleName = role;
-    //    }
-    //}
+   
 
 }
 <div class="row layout-top-spacing">

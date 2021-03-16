@@ -36,3 +36,24 @@
     color: #1B55E2;
     font-weight: bold;
 }
+.phoenix {
+    color: #6c4cf3;
+    font-weight: bold;
+}
+.phoenix-card {
+        color: #6b7de6;
+        filter: brightness(90%)
+    }
+.test {
+    color: #2d8eeb;
+    color: #6b7de6;
+    color: #6b6ee6;
+}
+.pbutton {
+    background-color: white;
+    color: #6b6ee6;
+}
+.btn-lbutton {
+    background-color: #6b6ee6;
+    color: white;
+}
