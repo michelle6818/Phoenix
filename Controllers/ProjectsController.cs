@@ -11,6 +11,8 @@ using Phoenix.Data;
 using Phoenix.Data.Enums;
 using Phoenix.Models;
 using Phoenix.Services;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Phoenix.Controllers
 {
@@ -21,17 +23,20 @@ namespace Phoenix.Controllers
         private readonly IBTProjectService _projectService;
         private readonly IBTRoleService _roleService;
         private readonly UserManager<BTUser> _userManager;
+        private readonly IBTFileService _fileService;
 
         public ProjectsController(
             ApplicationDbContext context,
             IBTProjectService projectService,
             IBTRoleService roleService,
-            UserManager<BTUser> userManager)
+            UserManager<BTUser> userManager,
+            IBTFileService fileService)
         {
             _context = context;
             _projectService = projectService;
             _roleService = roleService;
             _userManager = userManager;
+            _fileService = fileService;
         }
         [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> ManageUsersOnProject()
@@ -126,6 +131,7 @@ namespace Phoenix.Controllers
             {
                 return NotFound();
             }
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
             ViewData["ProjectId"] = new SelectList(await _roleService.UsersInRoleAsync(Roles.ProjectManager.ToString()), "Id", "FullName");
             ViewData["ProjectManagerId"] = new SelectList(await _roleService.UsersInRoleAsync(Roles.ProjectManager.ToString()), "Id", "FullName");
             ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
@@ -149,17 +155,29 @@ namespace Phoenix.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ProjectManager")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageFileName,ImageFileData,CompanyId")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageFileName,ImageFileData,CompanyId")] Project project, IFormFile file)
         {
             if (ModelState.IsValid)
             {
+
+                project.ImageFileData = await _fileService.ConvertFileToByteArrayAsync(file);
+                MemoryStream memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
+                var byteFile = memoryStream.ToArray();
+                memoryStream.Close();
+                memoryStream.Dispose();
+                var extension = Path.GetExtension(file.FileName);
+                string imageBase64Data = Convert.ToBase64String(byteFile);
+                project.ImageFileName = $"data:image/{extension};base64,{imageBase64Data}";
+                project.ImageFileData = byteFile;
                 _context.Add(project);
+
                 if (!User.IsInRole("DemoUser"))
                 {
                     await _context.SaveChangesAsync();
                 }
-
                 return RedirectToAction(nameof(Index));
+
             }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
             return View(project);
@@ -189,7 +207,7 @@ namespace Phoenix.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ProjectManager")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageFileName,ImageFileData,CompanyId")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageFileName,ImageFileData,CompanyId")] Project project, IFormFile file)
         {
             if (id != project.Id)
             {

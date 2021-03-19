@@ -21,39 +21,60 @@
     <div class="col-md-8">
 
         @* Tabs *@
-        <ul class="nav nav-tabs mb-2" id="animateLine" role="tablist" style="margin-left: 210px; margin-right: 240px;">
+        <ul class="nav nav-tabs mb-2" role="tablist" style="margin-left: -15px; margin-right: -15px;">
             <li class="nav-item">
-                <a class="nav-link active widget-one_hybrid widget-followers" id="animated-underline-home-tab" data-toggle="tab" href="#animated-underline-home" role="tab" aria-controls="animated-underline-home" aria-selected="true">Overview</a>
+                <a class="nav-link active widget-one_hybrid widget-followers" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Details</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link widget-one_hybrid widget-followers" id="animated-underline-comment-tab" data-toggle="tab" href="#animated-underline-comment" role="tab" aria-controls="animated-underline-comment" aria-selected="false">Comments</a>
+                <a class="nav-link widget-one_hybrid widget-followers" id="comment-tab" data-toggle="tab" href="#comment" role="tab" aria-controls="comment" aria-selected="false">Comments</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link widget-one_hybrid widget-followers" id="animated-underline-contact-tab" data-toggle="tab" href="#animated-underline-contact" role="tab" aria-controls="animated-underline-contact" aria-selected="false">History</a>
+                <a class="nav-link widget-one_hybrid widget-followers" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link widget-one_hybrid widget-followers" id="animated-underline-profile-tab" data-toggle="tab" href="#animated-underline-profile" role="tab" aria-controls="animated-underline-profile" aria-selected="false">Attachments</a>
+                <a class="nav-link widget-one_hybrid widget-followers" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab" aria-controls="attachment" aria-selected="false">Attachments</a>
             </li>
         </ul>
         <div class="tab-content" id="animateLineContent-4">
 
             @*Title*@
-            <div class="tab-pane fade show active" id="animated-underline-home" role="tabpanel" aria-labelledby="animated-underline-home-tab">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
                 <div class="row">
                     <div class="col-md-12 widget widget-one_hybrid widget-followers p-5">
                         <div class="row">
                             <div class="col-md">
-                                <h1 class="newTicket">"@Model.Title" Details</h1><hr />
+                                <h1 class="newTicket">@Model.Title</h1><hr />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col">
-                                <h3 class="mt-3 newTicket">Description</h3>
-                                   <h6 class="newTicket mt-1">@Model.Description</h6>
+                                <h4 class="mt-3 newTicket">Description</h4>
+                                <h6 class="newTicket mt-1">@Model.Description</h6>
                             </div>
-                            <div class="col align-self-end">
+                            <div class="col-md mt-3">
+                                <div class="text-right">
+                                    <div class="newTicket">
+                                        <h5 class="newTicket">
+                                            Priority: @Model.TicketPriority.Name
+                                        </h5>
+                                        <h5 class="newTicket">
+                                            Status: @Model.TicketStatus.Name
+                                        </h5>
+                                        <h5 class="newTicket">
+                                            Type: @Model.TicketType.Name
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <h5 class="mt-3 newTicket">Project</h5>
+                                <h6 class="newTicket mt-1">@Model.Project.Name</h6>
+                            </div>
+                            <div class="col align-self-end mt-5">
                                 @if (Model.Updated == null)
                                 {
                                     <h6 class="text-right mt-3 newTicket">Created</h6>
@@ -67,64 +88,50 @@
                                     <h6 class="text-right newTicket">@Model.Updated.ToString()</h6>
                                 }
                             </div>
+                           
                         </div>
-
-                        <div class="row">
-                            <div class="col-md">
-                               
-                            </div>
-                        </div>
-
-                        <div class="row mt-3 justify-content-between">
+   
+                        <div class="row justify-content-between">
                             <div class="col-md">
                                 <h5 class="newTicket">
                                     Team:
                                 </h5>
                                 <h6 class="newTicket">
+                                    Owner:
                                     @Html.DisplayFor(model => model.OwnerUser.FullName)
                                 </h6>
                                 @if (Model.DeveloperUserId != null)
                                 {
                                     <div>
                                         <h6 class="newTicket">
-                                        Developer:
-                                        @Model.DeveloperUser.FullName
-                                            </h6>
+                                            Developer:
+                                            @Model.DeveloperUser.FullName
+                                        </h6>
                                     </div>
                                 }
                                 else
                                 {
-                            <div>
-                                <h6 class="newTicket">
-                                    Developer: Unassigned
-                                    </h6>
-                            </div>
+                                    <div>
+                                        <h6 class="newTicket">
+                                            Developer: Unassigned
+                                        </h6>
+                                    </div>
                                 }
                             </div>
-                            <div class="col-md">
-                                <div class="text-right">
-                                    <div class="newTicket">
-                                        <h5 class="newTicket">
-                                        Priority: @Model.TicketPriority.Name,
-                                        Status: @Model.TicketStatus.Name,
-                                        Type: @Model.TicketType.Name
-                                            </h5>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
 
             @*Comments*@
-            <div class="tab-pane fade" id="animated-underline-comment" role="tabpanel" aria-labelledby="animated-underline-comment-tab">
+            <div class="tab-pane fade" id="comment" role="tabpanel" aria-labelledby="comment-tab">
                 <div class="row">
-                    <div class="col-md-10 widget widget-one_hybrid widget-followers p-5 offset-1">
+                    <div class="col-md-12 widget widget-one_hybrid widget-followers p-5">
                         <div class="row justify-content-between">
                             <div class="col-md">
                                 <h3 class="newTicket">Comments</h3><hr />
-                                @if (ticket.OwnerUserId == user.Id || ticket.DeveloperUserId == user.Id || User.IsInRole("Admin") ||
+                                @if (ticket.OwnerUserId == user.Id || User.IsInRole("Developer") && ticket.DeveloperUserId == user.Id || User.IsInRole("Admin") ||
                                User.IsInRole("ProjectManager") && (member.Contains(user)))
                                 {
                                     <div class="row">
@@ -161,7 +168,7 @@
                 </div>
 
             @* History *@
-            <div class="tab-pane fade" id="animated-underline-contact" role="tabpanel" aria-labelledby="animated-underline-contact-tab">
+            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
                 <div class="row">
                     <div class="col-md-12 widget widget-one_hybrid widget-followers p-5">
                         <h3 class="text-center newTicket">History</h3><hr />
@@ -175,7 +182,7 @@
                                         Date
                                     </th>
                                     <th>
-                                        User
+                                        Editor
                                     </th>
                                     <th>
                                         Old Value
@@ -188,7 +195,7 @@
                             <tbody>
                                 @foreach (var item in Model.Histories.OrderByDescending(c => c.Created))
                                 {
-                                    <tr>
+                                    <tr class="newTicket">
                                         <td>
                                             @item.Property
                                         <td>
@@ -213,7 +220,7 @@
             </div>
 
             @* Attachments *@
-            <div class="tab-pane fade" id="animated-underline-profile" role="tabpanel" aria-labelledby="animated-underline-profile-tab">
+            <div class="tab-pane fade" id="attachment" role="tabpanel" aria-labelledby="attachment-tab">
                 <div class="row">
                     <div class="col-md widget widget-one_hybrid widget-followers p-5">
                         <div class="row">

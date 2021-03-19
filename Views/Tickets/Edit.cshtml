@@ -62,7 +62,7 @@
                 @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
                 {
                     <div class="newTicket mb-3">
-                        <label for="DeveloperUserId" class="newTicket">ADeveloper</label>
+                        <label for="DeveloperUserId" class="newTicket">Select Developer</label>
                         <select asp-for="DeveloperUserId" class="form-control" asp-items="ViewBag.DeveloperIds"></select>
                         <span asp-validation-for="DeveloperUserId" class="text-danger"></span>
                     </div>

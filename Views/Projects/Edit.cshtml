@@ -1,5 +1,8 @@
 ﻿@model Phoenix.Models.Project
+@using Phoenix.Services 
 @inject Microsoft.AspNetCore.Identity.UserManager<BTUser> _userManager
+@inject IBTFileService BTFileService
+
 
 @{
     ViewData["Title"] = "Edit";
@@ -18,21 +21,21 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id" />
                 <div class="newTicket mb-3">
-                <div class="newTicket mb-3">
                     <label for="CompanyId" class="control-label">Company</label>
                     <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
                     <span asp-validation-for="CompanyId" class="text-danger"></span>
                 </div>
+                <div class="newTicket mb-3">
                     <label asp-for="Name" class="newTicket"></label>
                     <input asp-for="Name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="newTicket mb-3">
                     <label asp-for="Description" class="newTicket"></label>
-                    <input asp-for="Description" class="form-control" />
+                    <textarea input asp-for="Description" class="form-control"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
-                @*<div class="newTicket mb-3">
+                <div class="newTicket mb-3">
                     <label for="ImageFileName" class="newTicket">Image Name</label>
                     <input asp-for="ImageFileName" class="form-control" />
                     <span asp-validation-for="ImageFileName" class="text-danger"></span>
@@ -41,14 +44,14 @@
                     <label for="ImageFileData" class="control-label">Image File</label>
                     <input asp-for="ImageFileData" class="form-control" />
                     <span asp-validation-for="ImageFileData" class="text-danger"></span>
-                </div>*@
+                </div>
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
             </form>
         }
-        </div>
     </div>
+</div>
 
 <div>
     <a asp-action="Index">Back to List</a>

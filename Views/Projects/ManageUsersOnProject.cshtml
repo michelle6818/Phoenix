@@ -1,19 +1,19 @@
 ﻿
-<div class="card">
-    <div class="card-body bg-info">
-        <h4 class="card-title text-light text-center">Team Management</h4>
+<div class="card mt-5">
+    <div class="card-body bg widget widget-one_hybrid widget-followers p-5"> 
+        <h3 class="card-title newTicket text-center">Team Management</h3>
         <form asp-action="ManageUsersOnProject" method="post">
             <br />
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <label class="h5 text-light">Choose a Project</label>
+                        <h5 class="newTicket">Choose a Project</h5>
                         <select name="projectId" class="form-control" asp-items="@ViewBag.ProjectId"></select>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label class="h5 text-light">Choose one Project Manager</label>
+                        <h5 class="newTicket">Assign a Project Manager</h5>
                         <select name="projectManagerId" class="form-control" asp-items="@ViewBag.ProjectManagerId"></select>
                     </div>
                 </div>
@@ -21,20 +21,20 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <label class="h5 text-light">Choose some Developers</label>
+                        <h5 class="newTicket">Select Developers</h5>
                         <select name="developerIds" multiple="multiple" class="form-control" asp-items="@ViewBag.DeveloperIds"></select>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label class="h5 text-light">Choose some Submitters</label>
+                        <h5 class="newTicket">Select Submitters</h5>
                         <select name="submitterIds" multiple="multiple" class="form-control" asp-items="@ViewBag.SubmitterIds"></select>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-4 offset-2">
-                    <button type="submit" class="btn btn-success btn-lg">Add Member</button>
+                    <button type="submit" class="btn pbutton btn-lg">Add Member</button>
                 </div>
                
                     <div class="col offset-2">

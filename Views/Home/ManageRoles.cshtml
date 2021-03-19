@@ -15,25 +15,60 @@
 
 
 <form asp-action="ManageRoles" method="post">
-    <div class="row mt-2">
-        <div class="col">
+    <div class="row">
+        <div class="col mt-xl-5">
             <div class="card bg-light-primary">
                 <div class="card-body" >
                     @*<div class="col-4">*@
-                        <select name="userIds" style="width:75%"  class="form-control" multiple="multiple" asp-items="@users"></select>
+                        <select name="userIds" style="width:75%"  class="form-control newTicket" multiple="multiple" asp-items="@users"></select>
                     </div>
                 <div class="card-body">
                     @*<div class="col-4">*@
-                        <select name="roleName" style="width:75%" class="form-control" asp-items="@roles"></select>
+                        <select name="roleName" style="width:75%" class="form-control newTicket" asp-items="@roles"></select>
                     </div>
                
                 <div class="row">
                     <div class="col-4 offset-4 mb-2">
-                        <button type="submit" class="btn btn-success btn-lg">Assign</button>
+                        <button type="submit" class="btn pbutton btn-lg">Assign</button>
                     </div>
                 </div>
              </div>
          </div>
+    <div class="col">
+        <div class="card bg-light-primary">
+            <div class="card-body">
+                <h3 class="card-title newTicket">Employee - Role</h3>
+                <table class="table">
+                    <thead class="newTicket">
+                        <tr>
+                            <th class="newTicket">
+                               <h6 class="newTicket"> Employee</h6>
+                            </th>
+                            <th>
+                                <h6 class="newTicket">Current Role</h6>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="newTicket">
+                        @foreach (var user in userManager.Users.ToList())
+                        {
+                            <tr>
+                                <td>
+                                   <p class="newTicket"> @user.FullName</p>
+                                </td>
+                                <td class="newTicket">
+                                    @foreach (var role in (await roleService.ListUserRolesAsync(user)))
+                                    {
+                                        <p class="newTicket">@role</p>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
      </div>
 </form>
 
@@ -46,40 +81,4 @@
       </div>
     }*@
 
-<div class="row mt-2">
-    <div class="col">
-        <div class="card bg-light-success">
-            <div class="card-body">
-                <h3 class="card-title">Employee - Role</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                Employee
-                            </th>
-                            <th>
-                                Role
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var user in userManager.Users.ToList())
-                        {
-                            <tr>
-                                <td>
-                                    @user.FullName
-                                </td>
-                                <td>
-                                    @foreach (var role in (await roleService.ListUserRolesAsync(user)))
-                                    {
-                                        <p>@role</p>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+

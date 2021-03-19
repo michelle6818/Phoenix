@@ -11,6 +11,7 @@ namespace Phoenix.Controllers
 {
     [Authorize]
     
+    ///This is the controller that generates JSON for my
 
     public class ChartsController : Controller
     {
@@ -41,6 +42,10 @@ namespace Phoenix.Controllers
             };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         //Chart for priority
         public JsonResult PriorityChart()
         {
