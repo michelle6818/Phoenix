@@ -1,21 +1,35 @@
 ﻿@page
 @model LogoutModel
+@inject Microsoft.AspNetCore.Identity.UserManager<BTUser> _userManager
 @{
     ViewData["Title"] = "Log out";
+    var user = await _userManager.GetUserAsync(User);
 }
 
 <header>
-    <h1>@ViewData["Title"]</h1>
-    @{
-        if (User.Identity.IsAuthenticated)
-        {
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
-            </form>
-        }
-        else
-        {
-            <p>You have successfully logged out of the application.</p>
-        }
-    }
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6 mt-lg-5 widget widget-one_hybrid widget-followers p-5 mt-5">
+            <div class="row">
+                <div class="col">
+                    <h2 class="newTicket text-center">Goodbye, @user.FullName!</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 offset-4 mt-3">
+                    @{
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                                <button type="submit" class="btn btn-link text-dark text-center">Click here to Logout</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <p class="newTicket text-center">You have successfully logged out of the application.</p>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </header>
