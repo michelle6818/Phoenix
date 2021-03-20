@@ -185,7 +185,13 @@ namespace Phoenix.Controllers
                 return NotFound();
             }
 
+            ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
+            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
+            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
+            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatus, "Id", "Name", ticket.TicketStatusId);
+            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             return View(ticket);
+
         }
 
         // GET: Tickets/Create
@@ -360,7 +366,7 @@ namespace Phoenix.Controllers
                     await _historyService.AddHistoryAsync(oldTicket, newTicket, userId);
                     //await _context.SaveChangesAsync();
 
-                    return RedirectToAction("MyTickets");
+                    return RedirectToAction(nameof(Details), new { id = ticket.Id } ); ;
                 }
                 catch (DbUpdateConcurrencyException)
                 {

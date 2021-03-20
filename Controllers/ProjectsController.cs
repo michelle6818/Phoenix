@@ -235,10 +235,10 @@ namespace Phoenix.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Details), new { id = project.Id });
             }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
-            return View(project);
+            return RedirectToAction(nameof(Details), new { id = project.Id });
         }
 
         // GET: Projects/Delete/5

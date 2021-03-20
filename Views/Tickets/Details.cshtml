@@ -2,7 +2,7 @@
 @using Phoenix.Services
 @inject Microsoft.AspNetCore.Identity.UserManager<BTUser> _userManager
 @inject Phoenix.Services.IBTProjectService _projectService
-@inject Phoenix.Data.ApplicationDbContext _context 
+@inject Phoenix.Data.ApplicationDbContext _context
 
 @inject IBTFileService BTFileService
 
@@ -34,6 +34,9 @@
             <li class="nav-item">
                 <a class="nav-link widget-one_hybrid widget-followers" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab" aria-controls="attachment" aria-selected="false">Attachments</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link widget-one_hybrid widget-followers" id="create-tab" data-toggle="tab" href="#create" role="tab" aria-controls="create" aria-selected="false">Create a New Ticket</a>
+            </li>
         </ul>
         <div class="tab-content" id="animateLineContent-4">
 
@@ -44,16 +47,19 @@
                     <div class="col-md-12 widget widget-one_hybrid widget-followers p-5">
                         <div class="row">
                             <div class="col-md">
-                                <h1 class="newTicket">@Model.Title</h1><hr />
+                                <h1 class="newTicket">
+                                    @Model.Title
+                                    <a class="btn btn-info text-dark float-right" data-target="#edit" data-toggle="modal">Edit Ticket</a>
+                                </h1><hr />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col">
-                                <h4 class="mt-3 newTicket">Description</h4>
+                                <h4 class="mt-1 newTicket">Description</h4>
                                 <h6 class="newTicket mt-1">@Model.Description</h6>
                             </div>
-                            <div class="col-md mt-3">
+                            <div class="col-md mt-1">
                                 <div class="text-right">
                                     <div class="newTicket">
                                         <h5 class="newTicket">
@@ -69,37 +75,33 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-3">
+                        <div class="row">
                             <div class="col">
-                                <h5 class="mt-3 newTicket">Project</h5>
+                                <h5 class="mt-1 newTicket">Project</h5>
                                 <h6 class="newTicket mt-1">@Model.Project.Name</h6>
                             </div>
-                            <div class="col align-self-end mt-5">
-                                @if (Model.Updated == null)
-                                {
-                                    <h6 class="text-right mt-3 newTicket">Created</h6>
-                                    <h6 class="text-right newTicket">@Model.Created.ToString("g")</h6>
-                                }
-                                else
-                                {
-                                    <h6 class="text-right mt-3 newTicket">Created</h6>
-                                    <h6 class="text-right newTicket">@Model.Created.ToString("g")</h6>
-                                    <h6 class="text-right mt-3 newTicket">Recent Update</h6>
-                                    <h6 class="text-right newTicket">@Model.Updated.ToString()</h6>
-                                }
-                            </div>
-                           
+
                         </div>
-   
+
                         <div class="row justify-content-between">
-                            <div class="col-md">
+                            <div class="col-md mt-5">
                                 <h5 class="newTicket">
                                     Team:
                                 </h5>
-                                <h6 class="newTicket">
-                                    Owner:
-                                    @Html.DisplayFor(model => model.OwnerUser.FullName)
-                                </h6>
+                                @if (Model.OwnerUserId == null)
+                                {
+                                    <h6 class="newTicket">
+                                        Owner:
+                                        Seeded by Application
+                                    </h6>
+                                }
+                                else
+                                {
+                                    <h6 class="newTicket">
+                                        Owner:
+                                        @Html.DisplayFor(model => model.OwnerUser.FullName)
+                                    </h6>
+                                }
                                 @if (Model.DeveloperUserId != null)
                                 {
                                     <div>
@@ -119,6 +121,21 @@
                                 }
                             </div>
 
+
+                            <div class="col-md">
+                                @if (Model.Updated == null)
+                                {
+                                    <h6 class="text-right newTicket">Created</h6>
+                                    <h6 class="text-right newTicket">@Model.Created.ToString("g")</h6>
+                                }
+                                else
+                                {
+                                    <h6 class="text-right newTicket">Created</h6>
+                                    <h6 class="text-right newTicket">@Model.Created.ToString("g")</h6>
+                                    <h6 class="text-right mt-1 newTicket">Recent Update</h6>
+                                    <h6 class="text-right newTicket">@Model.Updated.ToString()</h6>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,7 +149,7 @@
                             <div class="col-md">
                                 <h3 class="newTicket">Comments</h3><hr />
                                 @if (ticket.OwnerUserId == user.Id || User.IsInRole("Developer") && ticket.DeveloperUserId == user.Id || User.IsInRole("Admin") ||
-                               User.IsInRole("ProjectManager") && (member.Contains(user)))
+                            User.IsInRole("ProjectManager") && (member.Contains(user)))
                                 {
                                     <div class="row">
                                         <div class="col-md">
@@ -149,29 +166,44 @@
                                 }
                             </div>
                             <div class="col-md">
-                                @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
+                                @if (Model.Comments.Any())
                                 {
-                                    <div class="row">
-                                        <h5 class="text-white">
-                                            @comment.Comment
-                                        </h5>
+                                    @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
+                                    {
+                                        <div class="row">
+                                            <h5 class="text-white">
+                                                @comment.Comment
+                                            </h5>
+                                        </div>
+                                        <div class="row mb-3">
+                                            by @comment.User.FullName
+                                            at @comment.Created.ToString("g")
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="row mt-5">
                                     </div>
-                                    <div class="row mb-3">
-                                        by @comment.User.FullName
-                                        at @comment.Created.ToString("g")
+                                    <div class="row mt-5">
+                                        <div class="col-lg text-center">
+                                            <h5 class="newTicket">
+                                                No Comments
+                                            </h5>
+                                        </div>
                                     </div>
                                 }
                             </div>
                         </div>
-                        </div>
                     </div>
                 </div>
+            </div>
 
             @* History *@
             <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
                 <div class="row">
                     <div class="col-md-12 widget widget-one_hybrid widget-followers p-5">
-                        <h3 class="text-center newTicket">History</h3><hr />
+                        <h3 class="newTicket">History</h3><hr />
                         <table class="table table-striped ticketsIndex table-responsive-md">
                             <thead>
                                 <tr>
@@ -231,14 +263,27 @@
                                     </div>
                                     <div class="col-md">
                                         <div class="row" style="font-size: 12px;">
-                                            @foreach (TicketAttachment item in Model.Attachments.OrderByDescending(c => c.Created))
+                                            @if (Model.Attachments.Any())
                                             {
-                                                <a asp-action="ShowFile" asp-controller="Tickets" asp-route-id="@item.Id" class="mr-3">
-                                                    <img src="@BTFileService.GetFileIcon(item.FileName)" style="height:60px;width:60px" />
-                                                    <p class="m-b-5 text-muted mt-3">@System.IO.Path.GetFileNameWithoutExtension(item.FileName)</p>
-                                                    <p class="mb-1 text-muted">Size: @BTFileService.FormatFileSize(item.FileData.Length)</p>
-                                                    <p class="date text-muted">@item.Created.ToString("MMM dd, yyyy")</p>
-                                                </a>
+                                                @foreach (TicketAttachment item in Model.Attachments.OrderByDescending(c => c.Created))
+                                                {
+                                                    <a asp-action="ShowFile" asp-controller="Tickets" asp-route-id="@item.Id" class="mr-3">
+                                                        <img src="@BTFileService.GetFileIcon(item.FileName)" style="height:60px;width:60px" />
+                                                        <p class="m-b-5 text-muted mt-3">@System.IO.Path.GetFileNameWithoutExtension(item.FileName)</p>
+                                                        <p class="mb-1 text-muted">Size: @BTFileService.FormatFileSize(item.FileData.Length)</p>
+                                                        <p class="date text-muted">@item.Created.ToString("MMM dd, yyyy")</p>
+                                                    </a>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div class="row mt-5">
+                                                    <div class="col">
+                                                        <h5 class="newTicket">
+                                                            No Attachments
+                                                        </h5>
+                                                    </div>
+                                                </div>
                                             }
                                         </div>
                                     </div>
@@ -246,7 +291,7 @@
                             </div>
                         </div>
                         @if (ticket.OwnerUserId == user.Id || ticket.DeveloperUserId == user.Id || User.IsInRole("Admin") ||
-                                 User.IsInRole("ProjectManager") && (member.Contains(user)))
+                              User.IsInRole("ProjectManager") && (member.Contains(user)))
                         {
                             <div class="row mt-5">
                                 <div class="col-md">
@@ -277,10 +322,159 @@
                 </div>
             </div>
 
+            @*Create*@
+            <div class="tab-pane fade" id="create" role="tabpanel" aria-labelledby="create-tab">
+                <div class="row">
+                    <div class="col-md-12 widget widget-one_hybrid widget-followers p-5">
+                        
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <h3 class="newTicket">Submit a new ticket, @user.FullName</h3>
+                            <hr />
+                            <form asp-action="Create" enctype="multipart/form-data">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Created" value="@DateTime.Now" />
+                                <input type="hidden" asp-for="Created" value="@user.FullName" />
+
+                                <div class="newTicket mb-3">
+                                    <label asp-for="Title" class="newTicket"></label>
+                                    <input asp-for="Title" class="form-control" />
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+                                <div class="newTicket mb-3">
+                                    <label asp-for="Description" class="newTicket"></label>
+                                    <textarea input asp-for="Description" class="form-control"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                                <div class="newTicket mb-3">
+                                    <label for="ProjectId" class="newTicket">Project</label>
+                                    <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
+                                </div>
+                                <div class="newTicket mb-3">
+                                    <label for="TicketTypeId" class="newTicket">Ticket Type</label>
+                                    <select asp-for="TicketTypeId" class="form-control" asp-items="ViewBag.TicketTypeId"></select>
+                                </div>
+                                <div class="newTicket mb-3">
+                                    <label for="TicketPriorityId" class="newTicket">Ticket Priority</label>
+                                    <select asp-for="TicketPriorityId" class="form-control" asp-items="ViewBag.TicketPriorityId"></select>
+                                </div>
+                                <div class="newTicket mb-3">
+                                    <label for="TicketStatusId" class="newTicket">Ticket Status</label>
+                                    <select asp-for="TicketStatusId" class="form-control" asp-items="ViewBag.TicketStatusId"></select>
+                                </div>
+                                <div class="form-group mb-5">
+                                    <label for="FileName" class="control-label"></label><br />
+                                    <input name="attachment" type="file" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Submit" class="btn btn-primary" />
+                                </div>
+                            </form>
+                        }
+                      
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<br />
+<br />
+<div class="text-center">
+    <a class="btn btn-info" asp-action="MyTickets">Back to Your Tickets</a>
+</div>
+
+@*Modal*@
+<div class="modal" id="edit">
+    <div class="modal modal-dialog modal-dialog-centered">
+        <div class="modal-content widget widget-one_hybrid widget-followers">
+
+            <div class="modal-header text-center">
+                <h4 class="modal-title newTicket">Edit Project, @user.FullName</h4>
+                <button type="button" class="btn" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col widget widget-one_hybrid widget-followers p-1 mt-2">
+                            <form asp-action="Edit" enctype="multipart/form-data">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" />
+                                <input type="hidden" asp-for="Created" />
+                                <input type="hidden" asp-for="Updated" value="@DateTime.Now" />
+                                <input type="hidden" asp-for="OwnerUserId" />
+                                <input type="hidden" asp-for="DeveloperUserId" />
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="newTicket mb-3">
+                                            <label asp-for="Title" class="newTicket"></label>
+                                            <input asp-for="Title" class="form-control" />
+                                            <span asp-validation-for="Title" class="text-danger"></span>
+                                        </div>
+                                        <div class="newTicket mb-3">
+                                            <label asp-for="Description" class="newTicket"></label>
+                                            <textarea input asp-for="Description" class="form-control"></textarea>
+                                            <span asp-validation-for="Description" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="newTicket mb-3">
+                                            <label for="ProjectId" class="newTicket">Project</label>
+                                            <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
+                                            <span asp-validation-for="ProjectId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="newTicket mb-3">
+                                            <label for="TicketTypeId" class="newTicket">Type</label>
+                                            <select asp-for="TicketTypeId" class="form-control" asp-items="ViewBag.TicketTypeId"></select>
+                                            <span asp-validation-for="TicketTypeId" class="text-danger"></span>
+                                        </div>
+                                        <div class="newTicket mb-3">
+                                            <label for="TicketPriorityId" class="newTicket">Priority</label>
+                                            <select asp-for="TicketPriorityId" class="form-control" asp-items="ViewBag.TicketPriorityId"></select>
+                                            <span asp-validation-for="TicketPriorityId" class="text-danger"></span>
+                                        </div>
+                                        <div class="newTicket mb-3">
+                                            <label for="TicketStatusId" class="newTicket">Status</label>
+                                            <select asp-for="TicketStatusId" class="form-control" asp-items="ViewBag.TicketStatusId"></select>
+                                            <span asp-validation-for="TicketStatusId" class="text-danger"></span>
+                                        </div>
+                                        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                                        {
+                                            <div class="newTicket mb-3">
+                                                <label for="DeveloperUserId" class="newTicket">Select Developer</label>
+                                                <select asp-for="DeveloperUserId" class="form-control" asp-items="ViewBag.DeveloperIds"></select>
+                                                <span asp-validation-for="DeveloperUserId" class="text-danger"></span>
+                                            </div>
+
+                                        }
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3 offset-3">
+                                        <div class="form-group">
+                                            <input type="submit" value="Save" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <div class="form-group" asp-action="Delete" asp-route-id="@Model.Id">
+                                                <input type="hidden" asp-for="Id" />
+                                                <input type="submit" value="Delete" class="btn btn-danger" />
+                                            </div>
+                                        }
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 

@@ -43,9 +43,13 @@
                     <input asp-for="ImageFileData" class="form-control" />
                     <span asp-validation-for="ImageFileData" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                </div>
+                <label class="col-md-4">Project Image:</label>
+                <div class="col-md-8">
+                    <div class="custom-file">
+                        <input name="formFile" type="file" class="form-control-file">
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
             </form>
         }
     </div>
