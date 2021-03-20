@@ -12,17 +12,12 @@
 
 <div class="row layout-top-spacing">
     <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-        <div class="widget-content widget-content-area br-6">
-            @*<div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3 class="card-title mb-0">Phoenix Projects</h3>
-                        </div>*@
+        <div class="widget-content widget-content-area br-6" style="background-color:aliceblue">
+           
             <div class="table-responsive mb-4 mt-4">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <h4 class="text-center">@user.FullName's Projects</h4>
+                    <h4 class="newTicket text-center">@user.FullName's Projects</h4>
                 }
                 <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
@@ -39,19 +34,19 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.Name</td>
-                                <td>@item.Company.Name</td>
-                                <td>@item.Description</td>
-                                <td>@item.Tickets.Count</td>
+                                <td><p class="newTicket">@item.Name</p></td>
+                                <td><p class="newTicket">@item.Company.Name</p></td>
+                                <td><p class="newTicket">@item.Description</p></td>
+                                <td><p class="newTicket">@item.Tickets.Count</p></td>
                                 <td>
                                     @foreach (var member in item.Members)
-                                    {<p>@member.FullName</p>}
+                                    {<p class="newTicket">@member.FullName</p>}
                                 </td>
 
                                 <td>
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-dark btn-sm">Open</button>
-                                        <button type="button" class="btn btn-dark btn-sm dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference28" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                        <button type="button" class="btn pbutton btn-md">Open</button>
+                                        <button type="button" class="btn pbutton btn-md dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference28" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuReference28">

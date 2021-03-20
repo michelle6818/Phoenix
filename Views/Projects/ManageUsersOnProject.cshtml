@@ -1,17 +1,20 @@
 ﻿
-<div class="card mt-5">
+<div class="card mt-3 mb-1">
     <div class="card-body bg widget widget-one_hybrid widget-followers p-5"> 
-        <h3 class="card-title newTicket text-center">Team Management</h3>
+        <h2 class="card-title newTicket text-center">Team Management</h2>
+        <hr />
         <form asp-action="ManageUsersOnProject" method="post">
             <br />
-            <div class="row">
-                <div class="col">
+            <div class="row justify-content-center">
+                <div class="col-5">
                     <div class="form-group">
                         <h5 class="newTicket">Choose a Project</h5>
                         <select name="projectId" class="form-control" asp-items="@ViewBag.ProjectId"></select>
                     </div>
                 </div>
-                <div class="col">
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-5">
                     <div class="form-group">
                         <h5 class="newTicket">Assign a Project Manager</h5>
                         <select name="projectManagerId" class="form-control" asp-items="@ViewBag.ProjectManagerId"></select>
@@ -32,15 +35,16 @@
                     </div>
                 </div>
             </div>
+            <br />
             <div class="row">
                 <div class="col-4 offset-2">
                     <button type="submit" class="btn pbutton btn-lg">Add Member</button>
                 </div>
-               
-                    <div class="col offset-2">
-                        <a asp-controller="Projects" asp-action="ManageUsersOnProject" class="btn btn-danger btn-lg">Cancel</a>
-                    </div>
-               
+
+                <div class="col offset-2">
+                    <a asp-controller="Projects" asp-action="ManageUsersOnProject" class="btn btn-danger btn-lg">Cancel</a>
+                </div>
+
             </div>
         </form>
      </div>

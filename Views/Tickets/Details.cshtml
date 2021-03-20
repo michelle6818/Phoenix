@@ -237,18 +237,15 @@
                                 {
                                     <tr class="newTicket">
                                         <td>
-                                            @item.Property
+                                            <p class="newTicket">@item.Property</p>
                                         <td>
-                                            @item.Created.ToString("G")
-                                        </td>
+                                            <p class="newTicket">@item.Created.ToString("G")</p></td>
                                         <td>
-                                            @item.User.FullName
-                                        </td>
+                                            <p class="newTicket">@item.User.FullName</p></td>
                                         <td>
-                                            @Html.Raw(item.OldValue)
-                                        </td>
+                                            <p class="newTicket">@Html.Raw(item.OldValue)</p></td>
                                         <td>
-                                            @Html.Raw(item.NewValue)
+                                            <p class="newTicket">@Html.Raw(item.NewValue)</p>
                                         </td>
                                     </tr>
 

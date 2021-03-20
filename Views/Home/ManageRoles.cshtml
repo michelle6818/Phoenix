@@ -14,63 +14,91 @@
 }
 
 
+ <div class="row">
 <form asp-action="ManageRoles" method="post">
-    <div class="row">
-        <div class="col mt-xl-5">
-            <div class="card bg-light-primary">
-                <div class="card-body" >
-                    @*<div class="col-4">*@
-                        <select name="userIds" style="width:75%"  class="form-control newTicket" multiple="multiple" asp-items="@users"></select>
-                    </div>
+        <div class="col-12 mt-xl-5 offset-3">
+            <div class="card" style="background-color: #c2d5ff">
                 <div class="card-body">
-                    @*<div class="col-4">*@
-                        <select name="roleName" style="width:75%" class="form-control newTicket" asp-items="@roles"></select>
-                    </div>
-               
+
+                    <select name="userIds" style="width:100%" class="form-control newTicket" multiple="multiple" asp-items="@users"></select>
+                </div>
+                <div class="card-body">
+
+                    <select name="roleName" style="width:100%" class="form-control newTicket" asp-items="@roles"></select>
+                </div>
+
                 <div class="row">
-                    <div class="col-4 offset-4 mb-2">
+                    <div class="col-4 offset-3 mb-2">
                         <button type="submit" class="btn pbutton btn-lg">Assign</button>
                     </div>
                 </div>
-             </div>
-         </div>
-    <div class="col">
-        <div class="card bg-light-primary">
-            <div class="card-body">
-                <h3 class="card-title newTicket">Employee - Role</h3>
-                <table class="table">
-                    <thead class="newTicket">
-                        <tr>
-                            <th class="newTicket">
-                               <h6 class="newTicket"> Employee</h6>
-                            </th>
-                            <th>
-                                <h6 class="newTicket">Current Role</h6>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="newTicket">
-                        @foreach (var user in userManager.Users.ToList())
-                        {
-                            <tr>
-                                <td>
-                                   <p class="newTicket"> @user.FullName</p>
-                                </td>
-                                <td class="newTicket">
-                                    @foreach (var role in (await roleService.ListUserRolesAsync(user)))
-                                    {
-                                        <p class="newTicket">@role</p>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
             </div>
         </div>
+  </form>
+
+ <div class="col-7 offset-1 mt-3">
+    <div class="widget-content widget-content-area br-6" style="background-color: #c2d5ff">
+        <div class="table-responsive mb-4 mt-4">           
+                <h4 class="newTicket text-center mb-2">Employee Roles</h4>
+            
+            <table id="html5-extension" class="table table-hover non-hover" style="width:70%">
+                <thead>
+                    <tr class="newTicket">
+                        <th><p class="newTicket">Employee</p></th>
+                       
+                        <th><p class="newTicket">Current Role</p></th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in userManager.Users.ToList())
+                    {
+                        <tr>
+                            <td><p class="newTicket">@user.FullName</p></td>
+                            
+                            <td>
+                            @foreach (var role in (await roleService.ListUserRolesAsync(user)))
+                            {
+                                <p class="newTicket">@role</p>
+                            }
+                            </td>
+                            
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-     </div>
-</form>
+ </div>
+    </div>
+   
+    </div>
+
+
+@section Scripts {
+    @*<script src="//cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>*@
+    <script src="~/plugins/table/datatable/datatables.js"></script>
+    <script src="~/plugins/table/datatable/button-ext/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/table/datatable/button-ext/jszip.min.js"></script>
+    <script src="~/plugins/table/datatable/button-ext/buttons.html5.min.js"></script>
+    <script src="~/plugins/table/datatable/button-ext/buttons.print.min.js"></script>
+    <script>
+        $('#html5-extension').DataTable({
+
+            "oLanguage": {
+                "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+                "sInfo": "Showing page _PAGE_ of _PAGES_",
+                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                "sSearchPlaceholder": "Search...",
+                "sLengthMenu": "Results :  _MENU_",
+            },
+            "stripeClasses": [],
+            "lengthMenu": [7, 10, 20, 50],
+            "pageLength": 7
+        });
+    </script>
+}
 
 
 @*@foreach (var user in userManager.Users.ToList())

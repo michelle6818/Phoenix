@@ -11,9 +11,9 @@
 
 <div class="row layout-top-spacing" id="cancel-row">
     <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-        <div class="widget-content widget-content-area br-6">
+        <div class="widget-content widget-content-area br-6" style="background-color:aliceblue">
             <div class="table-responsive mb-4 mt-4">
-                <table id="html5-extension" class="table table-hover" style="width:100%">
+                <table id="html5-extension" class="table table-hover" style="width:100%; background-color:aliceblue">
                     <thead>
                         <tr>
                             <th>
@@ -54,35 +54,39 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Title)
-                                </td>
+                                    <p class="newTicket">@item.Title</p></td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Description)
-                                </td>
+                                    <p class="newTicket">@item.Description</p></td>
                                 <td>
-                                    @item.Created.ToString("G")
-                                </td>
+                                    <p class="newTicket">@item.Created.ToString("G")</p></td>
                                 <td>
-                                    @item.Updated
-                                </td>
+                                    <p class="newTicket">@item.Updated</p></td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Project.Name)
-                                </td>
+                                    <p class="newTicket">@item.Project.Name</p></td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.TicketType.Name)
-                                </td>
+                                    <p class="newTicket">@item.TicketType.Name</p></td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                                </td>
+                                    <p class="newTicket">@item.TicketPriority.Name</p></td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                                </td>
+                                    <p class="newTicket">@item.TicketStatus.Name</p></td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
-                                </td>
+                                    @if (item.OwnerUserId == null)
+                                    {
+                                        <p class="newTicket">Seeded by Application</p>
+                                    }
+                                    else
+                                    {
+                                <p class="newTicket">@item.OwnerUser.FullName</p>}</td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
-                                </td>
+                                    @if (item.DeveloperUserId == null)
+                                    {
+                                        <p class="newTicket">Unassigned</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="newTicket">@item.DeveloperUser.FullName</p>
+                                    }
+                                    </td>
                                 <td class="text-center"><button class="btn btn-outline-primary"><a asp-action="Details" asp-route-id="@item.Id">Details</a></button> </td>                               
                             </tr>
                         }

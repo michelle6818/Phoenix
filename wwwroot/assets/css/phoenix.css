@@ -57,3 +57,22 @@
     background-color: #6b6ee6;
     color: white;
 }
+.td {
+    color: #1B55E2;
+    font-weight: bold;
+}
+.tr {
+    color: #1B55E2;
+    font-weight: bold;
+}
+.label {
+    color: #1B55E2;
+    font-weight: bold;
+}
+.feather-heart {
+    color:forestgreen
+}
+.oldTicket {
+    color: white;
+    font-weight: bold;
+}

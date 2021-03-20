@@ -12,21 +12,16 @@
 
 <div class="row layout-top-spacing" id="cancel-row">
     <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
-        <div class="widget-content widget-content-area br-6">
-            @*<div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3 class="card-title mb-0">Phoenix Projects</h3>
-                        </div>*@
+        <div class="widget-content widget-content-area br-6" style="background-color:aliceblue">
+           
             <div class="table-responsive mb-4 mt-4">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <h4 class="text-center">@user.FullName's Tickets</h4>
+                    <h4 class="newTicket text-center">@user.FullName's Tickets</h4>
                 }
                 <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
-                        <tr>
+                        <tr class="newTicket">
                             <th>Title</th>
                             <th>Description</th>
                             <th>Created</th>
@@ -43,24 +38,40 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>@item.Title</td>
-                                <td>@item.Description</td>
-                                <td>@item.Created.ToString("G")</td>
-                                <td>@item.Updated</td>
-                                <td>@item.Project.Name</td>
-                                <td>@item.TicketType.Name</td>
-                                <td>@item.TicketPriority.Name</td>
-                                <td>@item.TicketStatus.Name</td>
-                                <td>@Html.DisplayFor(modelItem => item.OwnerUser.FullName)</td>
+                            <tr class="newTicket">
+                                <td><p class="newTicket">@item.Title</p></td>
+                                <td><p class="newTicket">@item.Description</p></td>
+                                <td><p class="newTicket">@item.Created.ToString("G")</p></td>
+                                <td><p class="newTicket">@item.Updated</p></td>
+                                <td><p class="newTicket">@item.Project.Name</p></td>
+                                <td><p class="newTicket">@item.TicketType.Name</p></td>
+                                <td><p class="newTicket">@item.TicketPriority.Name</p></td>
+                                <td><p class="newTicket">@item.TicketStatus.Name</p></td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
+                                    @if (item.OwnerUserId == null)
+                                    {
+                                        <p class="newTicket">Seeded by Application</p>
+                                    }
+                                    else
+                                    {
+                                    <p class="newTicket">@Html.DisplayFor(modelItem => item.OwnerUser.FullName)</p>}
+                                    </td>
+                                <td>
+                                    @if (item.DeveloperUserId == null)
+                                    {
+                                        <p class="newTicket">Unassigned</p>
+                                    }
+                                    else
+                                    {
+                                <p class="newTicket">@Html.DisplayFor(modelItem => item.DeveloperUser.FullName)</p>
+                                    }
+                                    
                                 </td>
 
                                 <td>
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-dark btn-sm">Open</button>
-                                        <button type="button" class="btn btn-dark btn-sm dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference28" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                        <button type="button" class="btn pbutton btn-md">Open</button>
+                                        <button type="button" class="btn pbutton btn-md dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference28" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuReference28">
