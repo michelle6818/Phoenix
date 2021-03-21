@@ -34,24 +34,24 @@
                 </div>
                 <div class="newTicket mb-3">
                     <label for="ProjectId" class="newTicket">Project</label>
-                    <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
+                    <select asp-for="ProjectId" class="form-control custom-select" data-val="true" asp-items="ViewBag.ProjectId"></select>
                 </div>
                 <div class="newTicket mb-3">
                     <label for="TicketTypeId" class="newTicket">Ticket Type</label>
-                    <select asp-for="TicketTypeId" class="form-control" asp-items="ViewBag.TicketTypeId"></select>
+                    <select asp-for="TicketTypeId" class="form-control custom-select" data-val="true" asp-items="ViewBag.TicketTypeId"></select>
                 </div>
                 <div class="newTicket mb-3">
                     <label for="TicketPriorityId" class="newTicket">Ticket Priority</label>
-                    <select asp-for="TicketPriorityId" class="form-control" asp-items="ViewBag.TicketPriorityId"></select>
+                    <select asp-for="TicketPriorityId" class="form-control custom-select" data-val="true" asp-items="ViewBag.TicketPriorityId"></select>
                 </div>
                 <div class="newTicket mb-3">
                     <label for="TicketStatusId" class="newTicket">Ticket Status</label>
-                    <select asp-for="TicketStatusId" class="form-control" asp-items="ViewBag.TicketStatusId"></select>
+                    <select asp-for="TicketStatusId" class="form-control custom-select" data-val="true" asp-items="ViewBag.TicketStatusId"></select>
                 </div>
-                <div class="form-group mb-5">
+                @*<div class="form-group mb-5">
                     <label for="FileName" class="control-label"></label><br />
                     <input name="attachment" type="file" />
-                </div>
+                </div>*@
                 <div class="form-group">
                     <input type="submit" value="Submit" class="btn btn-primary" />
                 </div>

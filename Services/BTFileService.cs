@@ -13,7 +13,7 @@ namespace Phoenix.Services
         public async Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file)
         {
             MemoryStream memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
+            await file.CopyToAsync(memoryStream);  //check this out first
             var byteFile = memoryStream.ToArray();
             memoryStream.Close();
             memoryStream.Dispose();

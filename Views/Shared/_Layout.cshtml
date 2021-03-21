@@ -28,8 +28,9 @@
     <link rel="stylesheet" type="text/css" href="~/plugins/table/datatable/datatables.css">
     @*<link rel="stylesheet" type="text/css" href="~/plugins/table/datatable/dt-global_style-dark.css">*@
     <link rel="stylesheet" type="text/css" href="~/plugins/table/datatable/custom_dt_html5.css">
-    <link rel="stylesheet" href="~/assets/css/phoenix.css" />
     <link rel="stylesheet" type="text/css" href="~/plugins/table/datatable/dt-global_style.css">
+    <link rel="stylesheet" href="~/assets/css/phoenix.css" />
+    
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
 </head>
@@ -61,6 +62,8 @@
             </ul>
 
             @*Language dropdown*@
+
+   
             <ul class="navbar-item flex-row navbar-dropdown ml-auto">
 
                 @if (User.Identity.IsAuthenticated)
@@ -157,7 +160,7 @@
 
                 <div class="shadow-bottom"></div>
                 <ul class="list-unstyled menu-categories" id="accordionExample">
-                    <li class="menu">
+                    <li class="menu ">
                         <a asp-area="" asp-controller="Home" asp-action="Dashboard" aria-expanded="false" class="dropdown-toggle">
                             <div class="newTicket">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home" style="color:blue"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -177,7 +180,7 @@
                                 <span>Tickets</span>
                             </div>
                             <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right" style="color:blue" ><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right" style="color:blue"><polyline points="9 18 15 12 9 6"></polyline></svg>
                             </div>
                         </a>
                         <ul class="collapse submenu list-unstyled" id="components" data-parent="#accordionExample">
@@ -261,6 +264,7 @@
                             </ul>
                         </li>
                     }
+
                 </ul>
             </nav>
         </div>

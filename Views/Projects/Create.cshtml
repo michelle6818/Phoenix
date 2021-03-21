@@ -21,7 +21,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="newTicket mb-3">
                     <label for="CompanyId" class="newTicket">Company</label>
-                    <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+                    <select asp-for="CompanyId" class="form-control custom-select" data-val="true" asp-items="ViewBag.CompanyId"></select>
                 </div>
                 <div class="newTicket mb-3">
                     <label for="Name" class="newTicket">Name</label>

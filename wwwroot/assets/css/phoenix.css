@@ -73,6 +73,19 @@
     color:forestgreen
 }
 .oldTicket {
-    color: white;
+    color:lightblue;
     font-weight: bold;
 }
+.contactMe {
+    color: #ede8f7;
+    font-weight: bolder;
+}
+.contactMe2 {
+    color: #9481be;
+     font-weight: bold;
+}
+.contactMe3 {
+    color:white;
+    font-weight: bolder;
+}
+
