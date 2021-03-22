@@ -39,12 +39,12 @@
                         <div class="row">
                             <div class="col-md">
                                 <h1 class="newTicket">
-                                      @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
-                                       {
+                                    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                                    {
                                         <a class="btn btn-info text-dark float-right" data-target="#edit" data-toggle="modal">Edit Project</a>
-                                       }
-                                   "@Model.Name"
-                                   </h1>
+                                    }
+                                    "@Model.Name"
+                                </h1>
                                 <hr />
                             </div>
                         </div>
@@ -78,18 +78,18 @@
                                 <h6 class="newTicket mt-1 offset-2">@Model.Company.Name</h6>
                             </div>
 
-                            <div class="col-md mt-3 offset-1">
+                            <div class="col-md mt-3">
                                 <div>
-                                    <img src="@Model.ImageFileName" class="float-center" style="height:100px;width:150px" />
+                                    <img src="~/assets/img/BugTracker.jpg" style="height:200px;width:280px" />
                                 </div>
                             </div>
                         </div>
 
                         <div class="row mt-3 justify-content-between">
-                            
+
                             <div class="col align-self-end">
                                 <h5 class="newTicket">Tickets on Project:   @Model.Tickets.Count()</h5>
-                                
+
                             </div>
                         </div>
                         <div class="row mt-1">
@@ -116,7 +116,7 @@
                                         <a class="btn btn-info text-dark float-right" asp-action="ManageUsersOnProject">Add Users</a>
                                     }
                                 </h1>
-                            <hr />
+                                <hr />
                             </div>
                         </div>
                         <div class="row mt-1 justify-content-between">
@@ -149,7 +149,7 @@
 
                                     if (await roleService.IsUserInRoleAsync(member, "Developer"))
                                     {
-                                        <h6 class="newTicket">
+                                        <h6 class="newTicket offset-2">
                                             @member.FullName
                                         </h6>
 
@@ -157,7 +157,7 @@
                                     else if (await roleService.IsUserInRoleAsync(member, "Developer") == null)
                                     {
 
-                                        <h6 class="newTicket">
+                                        <h6 class="newTicket offset-2">
                                             Unassigned
                                         </h6>
 
@@ -171,7 +171,7 @@
 
                                     if (await roleService.IsUserInRoleAsync(member, "Submitter"))
                                     {
-                                        <h6 class="newTicket">
+                                        <h6 class="newTicket offset-2">
                                             @member.FullName
                                         </h6>
 
@@ -179,7 +179,7 @@
                                     else if (await roleService.IsUserInRoleAsync(member, "Submitter") == null)
                                     {
 
-                                        <h6 class="newTicket">
+                                        <h6 class="newTicket offset-2">
                                             Unassigned
                                         </h6>
 
@@ -187,7 +187,7 @@
                                 }
                             </div>
                         </div>
-                       
+
                     </div>
                 </div>
             </div>
@@ -197,13 +197,13 @@
                 <div class="row">
                     <div class="col-xl-12 widget widget-one_hybrid widget-followers mt-3">
                         <h1 class="newTicket mt-3" style="padding: 20px">
-                            Open Tickets: @Model.Tickets.Where(t => t.TicketStatus.Name != "Closed").Count()
+                            Active Tickets: @Model.Tickets.Where(t => t.TicketStatus.Name != "Closed").Count()
 
                             <a class="ml-1 btn btn-info text-dark float-right" asp-controller="Tickets" asp-action="Create">Add A New Ticket</a>
                         </h1><hr />
 
                         <div class="card-body">
-                            <table class="table">
+                            <table id="zero-config" class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th>
@@ -222,11 +222,11 @@
                                             Status
                                         </th>
                                         @*<th>
-                            Owner
-                        </th>
-                        <th>
-                            Developer
-                        </th>*@
+                                        Owner
+                                    </th>
+                                    <th>
+                                        Developer
+                                    </th>*@
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -250,11 +250,11 @@
                                                 @Html.DisplayFor(modelItem => item.TicketStatus.Name)
                                             </td>
                                             @*<td>
-                                @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
-                            </td>*@
+                                            @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
+                                        </td>*@
                                             <td>
                                                 @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("Developer") || User.IsInRole("Submitter"))
                                                 {
@@ -280,27 +280,27 @@
             <div class="modal" id="edit">
                 <div class="modal modal-dialog modal-dialog-centered">
                     <div class="modal-content widget widget-one_hybrid widget-followers">
-                            @if (User.Identity.IsAuthenticated)
-                            { 
-                        <div class="modal-header text-center">
-                            <h4 class="modal-title newTicket">Edit Project, @user.FullName</h4>
-                            <button type="button" class="btn" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="container">
-                                <div class="row justify-content-center">
-                                    <div class="col widget widget-one_hybrid widget-followers p-5 mt-2">
-                                       
-                                            
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="modal-header text-center">
+                                <h4 class="modal-title newTicket">Edit Project, @user.FullName</h4>
+                                <button type="button" class="btn" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row justify-content-center">
+                                        <div class="col widget widget-one_hybrid widget-followers p-5 mt-2">
+
+
                                             <form asp-action="Edit" enctype="multipart/form-data">
                                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                                 <input type="hidden" asp-for="Id" />
                                                 <div class="newTicket mb-3">
-                                                        <label for="CompanyId" class="control-label">Company</label>
-                                                        <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
-                                                        <span asp-validation-for="CompanyId" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="newTicket mb-3">
+                                                    <label for="CompanyId" class="control-label">Company</label>
+                                                    <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+                                                    <span asp-validation-for="CompanyId" class="text-danger"></span>
+                                                </div>
+                                                <div class="newTicket mb-3">
                                                     <label asp-for="Name" class="newTicket"></label>
                                                     <input asp-for="Name" class="form-control" />
                                                     <span asp-validation-for="Name" class="text-danger"></span>
@@ -310,39 +310,58 @@
                                                     <textarea input asp-for="Description" class="form-control"></textarea>
                                                     <span asp-validation-for="Description" class="text-danger"></span>
                                                 </div>
-                                                @*<div class="newTicket mb-3">
+                                                <div class="newTicket mb-3">
                                                  <label for="ImageFileName" class="newTicket">Image Name</label>
                                                    <input asp-for="ImageFileName" class="form-control" />
                                                     <span asp-validation-for="ImageFileName" class="text-danger"></span>
                                                     </div>
                                                        <div class="newTicket mb-3">
                                                 <label for="ImageFileData" class="control-label">Image File</label>
-                                            <input asp-for="ImageFileData" class="form-control" />
+                                            <input asp-for="ImageFormFile" class="form-control-file-rounded" />
                                             <span asp-validation-for="ImageFileData" class="text-danger"></span>
-                                                 </div>*@
+                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                <div class="form-group">
-                                                    <input type="submit" value="Save" class="btn btn-primary" />
-                                                </div>
+                                                        <div class="form-group">
+                                                            <input type="submit" value="Save" class="btn btn-primary" />
                                                         </div>
+                                                    </div>
                                                     <div class="col">
 
-                                        @if (User.IsInRole("Admin"))
-                                        {
-                                        <div class="form-group" asp-action="Delete" asp-route-id="@Model.Id">
-                                            <input type="hidden" asp-for="Id" />
-                                            <input type="submit" value="Delete" class="btn btn-danger" />
-                                        </div>
-                                        }
-                                        </div>
+                                                        @if (User.IsInRole("Admin"))
+                                                        {                                                 
+                                                            <div class="form-group" asp-action="Delete" asp-route-id="Id">
+                                                                <input type="hidden" asp-for="Id" />
+                                                                <input type="submit" value="Delete" class="btn btn-danger" />
+                                                            </div>
+                                                        }
+                                                    </div>
                                             </form>
-                                        
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                            }
+                        }
                     </div>
                 </div>
             </div>
+
+            @section Scripts {
+                <script src="//cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+                <script src="~/plugins/table/datatable/datatables.js"></script>
+                <script>
+                $('#zero-config').DataTable({
+                    "oLanguage": {
+                        "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+                        "sInfo": "Showing page _PAGE_ of _PAGES_",
+                        "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                        "sSearchPlaceholder": "Search...",
+                        "sLengthMenu": "Results :  _MENU_",
+                    },
+                    "stripeClasses": [],
+                    "lengthMenu": [5, 10, 20, 50],
+                    "pageLength": 5
+                });
+                </script>
+}

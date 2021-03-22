@@ -126,7 +126,7 @@ namespace Phoenix.Controllers
         }
 
 
-        //TICKETS SHOULD NOT BE ABLE TO BE EDITED OR DELETED
+        //Comments SHOULD NOT BE ABLE TO BE EDITED OR DELETED
 
 
 

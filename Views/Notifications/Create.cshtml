@@ -1,7 +1,10 @@
 ﻿@model Phoenix.Models.Notification
+@inject Microsoft.AspNetCore.Identity.UserManager<BTUser> _userManager
+
 
 @{
     ViewData["Title"] = "Create";
+    var user = await _userManager.GetUserAsync(User);
 }
 
 <div class="row justify-content-center">
@@ -10,6 +13,8 @@
         <hr />
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Created" value="@DateTime.Now" />
+            <input type="hidden" asp-for="Created" value="@user.FullName" />
             <div class="form-group">
                 <label asp-for="TicketId" class="control-label"></label>
                 <select asp-for="TicketId" class="form-control" asp-items="ViewBag.TicketId"></select>
@@ -19,19 +24,15 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="RecipientId" class="control-label"></label>
                 <select asp-for="RecipientId" class="form-control" asp-items="ViewBag.RecipientId"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="SenderId" class="control-label"></label>
-                <select asp-for="SenderId" class="form-control" asp-items="ViewBag.SenderId"></select>
-            </div>
+            @*<div class="form-group">
+                    <label asp-for="SenderId" class="control-label"></label>
+                    <select asp-for="SenderId" class="form-control" asp-items="ViewBag.SenderId"></select>
+                </div>*@
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Viewed" /> @Html.DisplayNameFor(model => model.Viewed)

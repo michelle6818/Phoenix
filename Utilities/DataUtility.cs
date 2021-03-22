@@ -15,7 +15,7 @@ using Phoenix.Models;
 
 namespace Phoenix.Utilities
 {
-    //static keyword is used so that we don't hae to create an instance of class
+    //static keyword is used so that we don't have to create an instance of class
     public static class DataUtility
     {
         //get company ids

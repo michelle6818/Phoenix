@@ -40,16 +40,18 @@
                 </div>
                 <div class="newTicket mb-3">
                     <label for="ImageFileData" class="newTicket">Image File Data</label>
-                    <input asp-for="ImageFileData" class="form-control" />
+                    <input asp-for="ImageFormFile" class="form-control" />
                     <span asp-validation-for="ImageFileData" class="text-danger"></span>
                 </div>
-                <label class="col-md-4">Project Image:</label>
+                @*<label class="col-md-4">Project Image:</label>
                 <div class="col-md-8">
                     <div class="custom-file">
-                        <input name="formFile" type="file" class="form-control-file">
+                        <input name="formFile" type="file" class="form-control-file">*@
                         <div class="form-group">
                             <input type="submit" value="Create" class="btn btn-primary" />
                         </div>
+                        @*</div>
+                    </div>*@
             </form>
         }
     </div>

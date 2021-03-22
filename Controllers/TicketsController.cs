@@ -202,7 +202,6 @@ namespace Phoenix.Controllers
             var userProjects = await _projectService.ListUserProjectsAsync(userId);
 
             ViewData["DeveloperIds"] = new MultiSelectList(await _roleService.UsersInRoleAsync(Roles.Developer.ToString()), "Id", "FullName");
-            //ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
             ViewData["ProjectId"] = new SelectList(userProjects, "Id", "Name");
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
             ViewData["TicketStatusId"] = new SelectList(_context.TicketStatus, "Id", "Name");
@@ -224,13 +223,12 @@ namespace Phoenix.Controllers
                 ticket.Created = DateTimeOffset.Now;
                 ticket.OwnerUserId = _userManager.GetUserId(User);
                 _context.Add(ticket);
-                if (!User.IsInRole("Demo"))
-                {
+               
                     if (User.IsInRole("Admin") || (User.IsInRole("Submitter") && member.Contains(user)))
                     {
                         await _context.SaveChangesAsync();
                     }
-                }
+                
                 return RedirectToAction("MyTickets");
 
             }

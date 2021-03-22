@@ -38,57 +38,64 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr class="newTicket">
-                                <td><p class="newTicket">@item.Title</p></td>
-                                <td><p class="newTicket">@item.Description</p></td>
-                                <td><p class="newTicket">@item.Created.ToString("G")</p></td>
-                                <td><p class="newTicket">@item.Updated</p></td>
-                                <td><p class="newTicket">@item.Project.Name</p></td>
-                                <td><p class="newTicket">@item.TicketType.Name</p></td>
-                                <td><p class="newTicket">@item.TicketPriority.Name</p></td>
-                                <td><p class="newTicket">@item.TicketStatus.Name</p></td>
-                                <td>
-                                    @if (item.OwnerUserId == null)
-                                    {
-                                        <p class="newTicket">Seeded by Application</p>
-                                    }
-                                    else
-                                    {
+                        <tr class="newTicket">
+                            <td><p class="newTicket">@item.Title</p></td>
+                            <td><p class="newTicket">@item.Description</p></td>
+                            <td><p class="newTicket">@item.Created.ToString("G")</p></td>
+                            @if (item.Updated == null)
+                            {
+                                <td><p class="newTicket">No Updates</p></td>
+                            }
+                            else
+                            {
+                            <td><p class="newTicket">@item.Updated.Value.ToString("G")</p></td>
+                            }
+                            <td><p class="newTicket">@item.Project.Name</p></td>
+                            <td><p class="newTicket">@item.TicketType.Name</p></td>
+                            <td><p class="newTicket">@item.TicketPriority.Name</p></td>
+                            <td><p class="newTicket">@item.TicketStatus.Name</p></td>
+                            <td>
+                                @if (item.OwnerUserId == null)
+                                {
+                                    <p class="newTicket">Seeded by Application</p>
+                                }
+                                else
+                                {
                                     <p class="newTicket">@Html.DisplayFor(modelItem => item.OwnerUser.FullName)</p>}
-                                    </td>
-                                <td>
-                                    @if (item.DeveloperUserId == null)
-                                    {
-                                        <p class="newTicket">Unassigned</p>
-                                    }
-                                    else
-                                    {
-                                <p class="newTicket">@Html.DisplayFor(modelItem => item.DeveloperUser.FullName)</p>
-                                    }
-                                    
-                                </td>
+                            </td>
+                            <td>
+                                @if (item.DeveloperUserId == null)
+                                {
+                                    <p class="newTicket">Unassigned</p>
+                                }
+                                else
+                                {
+                                    <p class="newTicket">@Html.DisplayFor(modelItem => item.DeveloperUser.FullName)</p>
+                                }
 
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn pbutton btn-md">Open</button>
-                                        <button type="button" class="btn pbutton btn-md dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference28" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuReference28">
-                                            <a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                                            @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
-                                            {
-                                                <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                            }
-                                            @if (User.IsInRole("Admin"))
-                                            {
-                                                <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Delete</a>}
+                            </td>
 
-                                        </div>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn pbutton btn-md">Open</button>
+                                    <button type="button" class="btn pbutton btn-md dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference28" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference28">
+                                        <a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                                        {
+                                            <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                        }
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Delete</a>}
+
                                     </div>
+                                </div>
 
-                                </td>
-                            </tr>
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -118,8 +125,8 @@
                     "sLengthMenu": "Results :  _MENU_",
                 },
                 "stripeClasses": [],
-                "lengthMenu": [7, 10, 20, 50],
-                "pageLength": 7
+                "lengthMenu": [5, 10, 20, 50],
+                "pageLength": 5
             });
         </script>
     }

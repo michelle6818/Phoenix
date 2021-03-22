@@ -84,7 +84,7 @@
                                                     <h6 class=""> </h6>
                                                     <p class="">@notification.Description</p>
                                                     <p class="">@notification.Sender.FullName</p>
-                                                    <span class="float-right text-muted text-sm">@notification.Created.ToString("MM/dd HH:mm")</span>
+                                                    <span class="float-right text-muted text-sm">@notification.Created.ToString("g")</span>
                                                     <a asp-controller="Tickets" asp-action="GoToTicket" asp-route-id="@notification.Id" class="btn btn-sm btn-success">Go to ticket</a>
                                                 </div>
                                                 <div class="icon-status">
@@ -184,12 +184,11 @@
                             </div>
                         </a>
                         <ul class="collapse submenu list-unstyled" id="components" data-parent="#accordionExample">
-                            @if (User.IsInRole("Admin") || User.IsInRole("Submitter"))
-                            {
+                           
                                 <li class="newTicket">
                                     <a asp-area="" asp-controller="Tickets" asp-action="Create"> <p class="newTicket">Submit Ticket </p></a>
                                 </li>
-                            }
+                            
                             @if (User.IsInRole("Admin"))
                             {
                                 <li>

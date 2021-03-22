@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,13 @@ namespace Phoenix.Controllers
     public class NotificationsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<BTUser> _userManager;
 
-        public NotificationsController(ApplicationDbContext context)
+        public NotificationsController(ApplicationDbContext context, 
+            UserManager<BTUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Notifications
@@ -53,7 +57,7 @@ namespace Phoenix.Controllers
         public IActionResult Create()
         {
             ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "FullName");
-            ViewData["SenderId"] = new SelectList(_context.Users, "Id", "FullName");
+           
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description");
             return View();
         }
@@ -67,6 +71,9 @@ namespace Phoenix.Controllers
         {
             if (ModelState.IsValid)
             {
+               
+                notification.SenderId = _userManager.GetUserId(User);
+                notification.Created = DateTimeOffset.Now;
                 _context.Add(notification);
                 if (!User.IsInRole("DemoUser"))
                 {
@@ -75,7 +82,6 @@ namespace Phoenix.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "FullName", notification.RecipientId);
-            ViewData["SenderId"] = new SelectList(_context.Users, "Id", "FullName", notification.SenderId);
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description", notification.TicketId);
             return View(notification);
         }
