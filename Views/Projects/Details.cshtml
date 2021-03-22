@@ -295,6 +295,8 @@
                                             <form asp-action="Edit" enctype="multipart/form-data">
                                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                                 <input type="hidden" asp-for="Id" />
+                                                <div class="row">
+                                                    <div class="col">
                                                 <div class="newTicket mb-3">
                                                     <label for="CompanyId" class="control-label">Company</label>
                                                     <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
@@ -305,11 +307,8 @@
                                                     <input asp-for="Name" class="form-control" />
                                                     <span asp-validation-for="Name" class="text-danger"></span>
                                                 </div>
-                                                <div class="newTicket mb-3">
-                                                    <label asp-for="Description" class="newTicket"></label>
-                                                    <textarea input asp-for="Description" class="form-control"></textarea>
-                                                    <span asp-validation-for="Description" class="text-danger"></span>
-                                                </div>
+                                                        </div>
+                                                    <div class="col">
                                                 <div class="newTicket mb-3">
                                                  <label for="ImageFileName" class="newTicket">Image Name</label>
                                                    <input asp-for="ImageFileName" class="form-control" />
@@ -320,13 +319,24 @@
                                             <input asp-for="ImageFormFile" class="form-control-file-rounded" />
                                             <span asp-validation-for="ImageFileData" class="text-danger"></span>
                                                  </div>
+                                                        </div>
+                                                    </div>
                                                 <div class="row">
-                                                    <div class="col">
+                                                    <div class="col"> 
+                                                   <div class="newTicket mb-3">
+                                                    <label asp-for="Description" class="newTicket"></label>
+                                                    <textarea input asp-for="Description" class="form-control"></textarea>
+                                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                                </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-3 offset-3">
                                                         <div class="form-group">
                                                             <input type="submit" value="Save" class="btn btn-primary" />
                                                         </div>
                                                     </div>
-                                                    <div class="col">
+                                                    <div class="col-3">
 
                                                         @if (User.IsInRole("Admin"))
                                                         {                                                 
