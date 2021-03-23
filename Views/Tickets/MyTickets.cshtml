@@ -61,14 +61,14 @@
                             </td>
                             <td><p class="newTicket">@item.Title</p></td>
                             <td><p class="newTicket">@item.Description</p></td>
-                            <td><p class="newTicket">@item.Created.ToString("G")</p></td>
+                            <td><p class="newTicket">@item.Created.ToString("g")</p></td>
                             @if (item.Updated == null)
                             {
                                 <td><p class="newTicket">No Updates</p></td>
                             }
                             else
                             {
-                            <td><p class="newTicket">@item.Updated.Value.ToString("G")</p></td>
+                            <td><p class="newTicket">@item.Updated.Value.ToString("g")</p></td>
                             }
                             <td><p class="newTicket">@item.Project.Name</p></td>
                             <td><p class="newTicket">@item.TicketType.Name</p></td>
