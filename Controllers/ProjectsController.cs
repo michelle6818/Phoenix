@@ -155,21 +155,17 @@ namespace Phoenix.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ProjectManager")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageFileName,ImageFileData,CompanyId")] Project project, IFormFile file)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageFileName,ImageFileData,ContentType,CompanyId")] Project project, IFormFile file)
         {
             if (ModelState.IsValid)
             {
 
+                
+                //project.ImageFileName = _fileService.FormatFileSize(file);
                 project.ImageFileData = await _fileService.ConvertFileToByteArrayAsync(file);
-                MemoryStream memoryStream = new MemoryStream();
-                await file.CopyToAsync(memoryStream);
-                var byteFile = memoryStream.ToArray();
-                memoryStream.Close();
-                memoryStream.Dispose();
-                var extension = Path.GetExtension(file.FileName);
-                string imageBase64Data = Convert.ToBase64String(byteFile);
-                project.ImageFileName = $"data:image/{extension};base64,{imageBase64Data}";
-                project.ImageFileData = byteFile;
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                project.ImageFileData = ms.ToArray();
                 _context.Add(project);
 
                 if (!User.IsInRole("DemoUser"))

@@ -22,6 +22,7 @@
                 <table id="html5-extension" class="table table-hover non-hover" style="width:100%">
                     <thead>
                         <tr class="newTicket">
+                            <th></th>
                             <th>Title</th>
                             <th>Description</th>
                             <th>Created</th>
@@ -32,13 +33,32 @@
                             <th>Ticket Status</th>
                             <th>Owner</th>
                             <th>Developer</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
                         <tr class="newTicket">
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn pbutton btn-md">Open</button>
+                                    <button type="button" class="btn pbutton btn-md dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference28" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference28">
+                                        <a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                                        {
+                                            <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                        }
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Delete</a>}
+
+                                    </div>
+                                </div>
+
+                            </td>
                             <td><p class="newTicket">@item.Title</p></td>
                             <td><p class="newTicket">@item.Description</p></td>
                             <td><p class="newTicket">@item.Created.ToString("G")</p></td>
@@ -75,26 +95,6 @@
 
                             </td>
 
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn pbutton btn-md">Open</button>
-                                    <button type="button" class="btn pbutton btn-md dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference28" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference28">
-                                        <a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                                        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                        }
-                                        @if (User.IsInRole("Admin"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Delete</a>}
-
-                                    </div>
-                                </div>
-
-                            </td>
                         </tr>
                         }
                     </tbody>
