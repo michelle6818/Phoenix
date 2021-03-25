@@ -301,6 +301,11 @@ namespace Phoenix.Controllers
                 return NotFound();
             }
 
+            if (User.IsInRole("Demo"))
+            {
+                return RedirectToAction("MyTickets");
+            }
+
             //Get Old Ticket
             Ticket oldTicket = await _context.Tickets
                 .Include(t => t.TicketType)
@@ -315,66 +320,69 @@ namespace Phoenix.Controllers
                 var notMember = await _projectService.UsersNotOnProjectAsync(ticket.ProjectId);
             if (ModelState.IsValid)
             {
-                try
+                if (!User.IsInRole("Demo"))
                 {
-
-                    ticket.Updated = DateTimeOffset.Now;
-
-                    _context.Update(ticket);
-                    //Admin can make changes
-                    //Submitter can make changes to tickets they own
-                    if (ticket.OwnerUserId == user.Id)
+                    try
                     {
-                        await _context.SaveChangesAsync();
+
+                        ticket.Updated = DateTimeOffset.Now;
+
+                        _context.Update(ticket);
+                        //Admin can make changes
+                        //Submitter can make changes to tickets they own
+                        if (ticket.OwnerUserId == user.Id)
+                        {
+                            await _context.SaveChangesAsync();
+                        }
+                        else if (User.IsInRole("Admin"))
+                        {
+                            await _context.SaveChangesAsync();
+                        }
+                        //Developers can make changes to their tickets
+                        else if (User.IsInRole("Developer") && (ticket.DeveloperUserId == user.Id))
+                        {
+                            await _context.SaveChangesAsync();
+                        }
+                        //PM can make changes to tickets they manager
+                        else if (await _roleService.IsUserInRoleAsync(user, "ProjectManager") && (!notMember.Contains(user)))
+                        {
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            return RedirectToAction("MyTickets");
+                        }
+
+                        //Add History
+
+                        //Get User Id
+                        string userId = _userManager.GetUserId(User);
+
+                        //Get New Ticket
+                        Ticket newTicket = await _context.Tickets
+                         .Include(t => t.TicketType)
+                         .Include(t => t.TicketPriority)
+                         .Include(t => t.TicketStatus)
+                         .Include(t => t.Project)
+                         .Include(t => t.DeveloperUser)
+                         .AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+
+                        //Call History Service
+                        await _historyService.AddHistoryAsync(oldTicket, newTicket, userId);
+                        //await _context.SaveChangesAsync();
+
+                        return RedirectToAction(nameof(Details), new { id = ticket.Id }); ;
                     }
-                    else if (User.IsInRole("Admin"))
+                    catch (DbUpdateConcurrencyException)
                     {
-                        await _context.SaveChangesAsync();
-                    }
-                    //Developers can make changes to their tickets
-                    else if (User.IsInRole("Developer") && (ticket.DeveloperUserId == user.Id))
-                    {
-                        await _context.SaveChangesAsync();
-                    }
-                    //PM can make changes to tickets they manager
-                    else if (await _roleService.IsUserInRoleAsync(user, "ProjectManager") && (!notMember.Contains(user)))
-                    {
-                        await _context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        return RedirectToAction("MyTickets");
-                    }
-
-                    //Add History
-
-                    //Get User Id
-                    string userId = _userManager.GetUserId(User);
-
-                    //Get New Ticket
-                    Ticket newTicket = await _context.Tickets
-                     .Include(t => t.TicketType)
-                     .Include(t => t.TicketPriority)
-                     .Include(t => t.TicketStatus)
-                     .Include(t => t.Project)
-                     .Include(t => t.DeveloperUser)
-                     .AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
-
-                    //Call History Service
-                    await _historyService.AddHistoryAsync(oldTicket, newTicket, userId);
-                    //await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Details), new { id = ticket.Id } ); ;
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TicketExists(ticket.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        if (!TicketExists(ticket.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
                 }
             }

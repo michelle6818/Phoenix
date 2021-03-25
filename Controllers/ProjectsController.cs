@@ -53,8 +53,14 @@ namespace Phoenix.Controllers
         [Authorize(Roles = "Admin,ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ManageUsersOnProject(int projectId, string projectManagerId, List<string> developerIds, List<string> submitterIds)
+        public async Task<IActionResult> ManageUsersOnProject(int projectId, 
+            string projectManagerId, List<string> developerIds, List<string> submitterIds)
         {
+            if (User.IsInRole("Demo"))
+            {
+                return RedirectToAction(nameof(Details), new { id = projectId });
+            }
+
             var currentlyOnProject = await _projectService.UsersNotOnProjectAsync(projectId);
             foreach (var user in currentlyOnProject)
             {
@@ -145,6 +151,10 @@ namespace Phoenix.Controllers
         [Authorize(Roles = "Admin,ProjectManager")]
         public IActionResult Create()
         {
+            if (User.IsInRole("Demo"))
+            {
+                return RedirectToAction(nameof(Index));
+            }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name");
             return View();
         }
@@ -160,12 +170,11 @@ namespace Phoenix.Controllers
             if (ModelState.IsValid)
             {
 
-                
-                //project.ImageFileName = _fileService.FormatFileSize(file);
-                project.ImageFileData = await _fileService.ConvertFileToByteArrayAsync(file);
-                using var ms = new MemoryStream();
-                await file.CopyToAsync(ms);
-                project.ImageFileData = ms.ToArray();
+                if(file is not null)
+                {
+                    project.ImageFileName = file.FileName;
+                    project.ImageFileData = await _fileService.ConvertFileToByteArrayAsync(file);
+                }
                 _context.Add(project);
 
                 if (!User.IsInRole("DemoUser"))
@@ -214,10 +223,21 @@ namespace Phoenix.Controllers
             {
                 try
                 {
-                    _context.Update(project);
-                    if (!User.IsInRole("DemoUser"))
+                    var user = await _userManager.GetUserAsync(User);
+                    if(file is not null)
                     {
-                        await _context.SaveChangesAsync();
+                        project.ImageFileName = file.FileName;
+                        project.ImageFileData = await _fileService.ConvertFileToByteArrayAsync(file);
+                    }
+                    _context.Update(project);                                              //breaks here
+                    if (!User.IsInRole("DemoUser"))
+                   {
+                    var member = await _projectService.UsersOnProjectAsync(project.Id);
+
+                        if (User.IsInRole("Admin") || (User.IsInRole("ProjectManager") && member.Contains(user)))
+                        {
+                            await _context.SaveChangesAsync();
+                        }
                     }
                 }
                 catch (DbUpdateConcurrencyException)
@@ -231,10 +251,12 @@ namespace Phoenix.Controllers
                         throw;
                     }
                 }
-                    return RedirectToAction(nameof(Details), new { id = project.Id });
+
+                return RedirectToAction(nameof(Details), new { id = project.Id });
             }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Name", project.CompanyId);
             return RedirectToAction(nameof(Details), new { id = project.Id });
+
         }
 
         // GET: Projects/Delete/5

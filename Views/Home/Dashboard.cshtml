@@ -10,64 +10,66 @@
    
 
 }
+<div class="container-fluid">
 <div class="row layout-top-spacing">
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-     
-            <div class="card" style="background-color:aliceblue">
-                <div class="card-body">
-                    <div class="row widget-statistic">
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-12">
-                            <div class="widget widget-one_hybrid widget-referral">
-                                <div class="widget-heading">
-                                    <div class="w-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="#626262" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 8v4" /><path d="M12 16h.01" /></g></svg> 
-                                    </div>
-                                    <p class="newTicket w-value">@Model.Tickets.Where(t => t.TicketPriority.Name == "Urgent").Count()</p>
-                                    <h5><p class="newTicket">Critical Tickets</p></h5>
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">    
+        <div class="card">
+            <div class="card-body">
+                <div class="row widget-statistic">
+                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="widget widget-one_hybrid widget-referral" style="height: 175px">
+                            <div class="widget-heading">
+                                <div class="w-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="#626262" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 8v4" /><path d="M12 16h.01" /></g></svg>
                                 </div>
-
+                                <p class="newTicket w-value">@Model.Tickets.Where(t => t.TicketPriority.Name == "Urgent").Count()</p>
+                                <h5><p class="newTicket">Critical Tickets</p></h5>
                             </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-12">
-                            <div class="widget widget-one_hybrid widget-followers">
-                                <div class="widget-heading">
-                                    <div class="w-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="#626262" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><path d="M18 8l5 5" /><path d="M23 8l-5 5" /></g></svg> </div>
-                                    <p class="newTicket w-value">@Model.Tickets.Where(t => t.DeveloperUser == null).Count()</p>
-                                    <h5><p class="newTicket">Unassigned Tickets</p></h5>
-                                </div>
 
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="widget widget-one_hybrid widget-followers" style="height: 175px">
+                            <div class="widget-heading">
+                                <div class="w-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="#626262" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><path d="M18 8l5 5" /><path d="M23 8l-5 5" /></g></svg>
+                                </div>
+                                <p class="newTicket w-value">@Model.Tickets.Where(t => t.DeveloperUser == null).Count()</p>
+                                <h5><p class="newTicket">Unassigned Tickets</p></h5>
                             </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
-                            <div class="widget widget-one_hybrid widget-engagement">
-                                <div class="widget-heading">
-                                    <div class="newTicket w-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="#626262" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8s11 8 11 8s-4 8-11 8s-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></g></svg>
-                                    </div>
-                                    <p class="newTicket w-value">@Model.Tickets.Where(t => t.TicketStatus.Name == "New").Count()</p>
-                                    <h5><p class="newTicket">New Tickets</p></h5>
-                                </div>
 
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                        <div class="widget widget-one_hybrid widget-engagement" style="height: 175px">
+                            <div class="widget-heading">
+                                <div class="newTicket w-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="#626262" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8s11 8 11 8s-4 8-11 8s-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></g></svg>
+                                </div>
+                                <p class="newTicket w-value">@Model.Tickets.Where(t => t.TicketStatus.Name == "New").Count()</p>
+                                <h5><p class="newTicket">New Tickets</p></h5>
                             </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
-                            <div class="widget widget-one_hybrid widget-new">
-                                <div class="widget-heading">
-                                    <div class="newTicket w-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="#626262" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" /></g></svg>  </div>
-                                    <p class="newTicket w-value">@Model.Tickets.Where(t => t.TicketStatus.Name == "Closed").Count()</p>
-                                    <h5><p class="newTicket">Resolved Tickets</p></h5>
-                                </div>
 
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                        <div class="widget widget-one_hybrid widget-new" style="height: 175px">
+                            <div class="widget-heading">
+                                <div class="newTicket w-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="#626262" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" /></g></svg>
+                                </div>
+                                <p class="newTicket w-value">@Model.Tickets.Where(t => t.TicketStatus.Name == "Closed").Count()</p>
+                                <h5><p class="newTicket">Resolved Tickets</p></h5>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+            </div>
+        </div>
     </div>
-
+       <div class="container-fluid">
             <div class="row layout-top-spacing">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
                     <div class="row">
@@ -76,7 +78,7 @@
                                 <div class="card-body">
                                     <h4 class="newTicket card-title mb-0 text-center">Ticket Priority</h4>
                                 </div>
-                                <canvas id="myChart3" width="400" height="400"></canvas>
+                                <canvas id="myChart3" style="height: 300px"></canvas>
                             </div>
                         </div>
 
@@ -87,7 +89,7 @@
                                 <div class="card-body">
                                     <h4 class="newTicket card-title mb-0 text-center">Ticket Status</h4>
                                 </div>
-                                <canvas id="myChart" width="400" height="400"></canvas>
+                                <canvas id="myChart" style="height: 300px"></canvas>
                             </div>
                         </div>
 
@@ -98,13 +100,13 @@
                                 <div class="card-body">
                                     <h4 class="newTicket card-title mb-0 text-center">Ticket Type</h4>
                                 </div>
-                                <canvas id="myChart2" width="400" height="400"></canvas>
+                                <canvas id="myChart2" style="height: 300px"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
+           </div>
 
             <div class="row layout-top-spacing">               
                 <div class="col-xl-12 col-lg-12 col-sm-12  layout-top-spacing">

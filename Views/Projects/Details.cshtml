@@ -80,7 +80,14 @@
 
                             <div class="col-md mt-3">
                                 <div>
-                                    <img src="~/assets/img/BugTracker.jpg" style="height:200px;width:280px" />
+                                    @if (Model.ImageFileData is not null)
+                                    {
+                                   <img src="@fileService.ConvertByteArrayToFile(Model.ImageFileData, Model.ImageFileName)" style="height:200px;width:280px" />
+                                    }
+                                    else
+                                    {
+                                    <img src="~/assets/img/200x200.jpg" style="height:200px;width:280px" />
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -295,39 +302,41 @@
                                             <form asp-action="Edit" enctype="multipart/form-data">
                                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                                 <input type="hidden" asp-for="Id" />
+                                                <input type="hidden" asp-for="ImageFileName" />
+                                                <input type="hidden" asp-for="ImageFileData" />
                                                 <div class="row">
                                                     <div class="col">
-                                                <div class="newTicket mb-3">
-                                                    <label for="CompanyId" class="control-label">Company</label>
-                                                    <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
-                                                    <span asp-validation-for="CompanyId" class="text-danger"></span>
-                                                </div>
-                                                <div class="newTicket mb-3">
-                                                    <label asp-for="Name" class="newTicket"></label>
-                                                    <input asp-for="Name" class="form-control" />
-                                                    <span asp-validation-for="Name" class="text-danger"></span>
-                                                </div>
+                                                        <div class="newTicket mb-3">
+                                                            <label for="CompanyId" class="control-label">Company</label>
+                                                            <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+                                                            <span asp-validation-for="CompanyId" class="text-danger"></span>
                                                         </div>
+                                                        <div class="newTicket mb-3">
+                                                            <label asp-for="Name" class="newTicket"></label>
+                                                            <input asp-for="Name" class="form-control" />
+                                                            <span asp-validation-for="Name" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
                                                     <div class="col">
-                                                <div class="newTicket mb-3">
-                                                 <label for="ImageFileName" class="newTicket">Image Name</label>
-                                                   <input asp-for="ImageFileName" class="form-control" />
-                                                    <span asp-validation-for="ImageFileName" class="text-danger"></span>
-                                                    </div>
-                                                       <div class="newTicket mb-3">
-                                                <label for="ImageFileData" class="control-label">Image File</label>
-                                            <input asp-for="ImageFormFile" class="form-control-file-rounded" />
-                                            <span asp-validation-for="ImageFileData" class="text-danger"></span>
-                                                 </div>
+                                                        <div class="newTicket mb-3">
+                                                            <label for="ImageFileName" class="newTicket">Image Name</label>
+                                                            <input asp-for="ImageFileName" class="form-control" />
+                                                            <span asp-validation-for="ImageFileName" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="newTicket mb-3">
+                                                            <label for="ImageFileData" class="control-label">Image File</label>
+                                                            <input asp-for="ImageFormFile" name="file" class="form-control-file-rounded" />
+                                                            <span asp-validation-for="ImageFileData" class="text-danger"></span>
                                                         </div>
                                                     </div>
-                                                <div class="row">
-                                                    <div class="col"> 
-                                                   <div class="newTicket mb-3">
-                                                    <label asp-for="Description" class="newTicket"></label>
-                                                    <textarea input asp-for="Description" class="form-control"></textarea>
-                                                    <span asp-validation-for="Description" class="text-danger"></span>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="newTicket mb-3">
+                                                            <label asp-for="Description" class="newTicket"></label>
+                                                            <textarea input asp-for="Description" class="form-control"></textarea>
+                                                            <span asp-validation-for="Description" class="text-danger"></span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -339,7 +348,7 @@
                                                     <div class="col-3">
 
                                                         @if (User.IsInRole("Admin"))
-                                                        {                                                 
+                                                        {
                                                             <div class="form-group" asp-action="Delete" asp-route-id="Id">
                                                                 <input type="hidden" asp-for="Id" />
                                                                 <input type="submit" value="Delete" class="btn btn-danger" />

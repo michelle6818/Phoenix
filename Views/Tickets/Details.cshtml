@@ -47,10 +47,13 @@
                     <div class="col-md-12 widget widget-one_hybrid widget-followers p-5">
                         <div class="row">
                             <div class="col-md">
+                                @if (User.IsInRole("Admin") || User.IsInRole("Submitter") || User.IsInRole("Developer"))
+                                {
                                 <h1 class="newTicket">
                                     @Model.Title
                                     <a class="btn btn-info text-dark float-right" data-target="#edit" data-toggle="modal">Edit Ticket</a>
                                 </h1><hr />
+                                }
                             </div>
                         </div>
 

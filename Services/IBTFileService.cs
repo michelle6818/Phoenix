@@ -10,7 +10,7 @@ namespace Phoenix.Services
     {
         public Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file);
 
-        public string ConvertByteArrayToFile(byte[] fileData, string extension);
+        public string ConvertByteArrayToFile(byte[] fileData, string fileName);
 
         public string GetFileIcon(string file);
 

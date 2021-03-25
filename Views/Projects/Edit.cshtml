@@ -20,6 +20,8 @@
             <form asp-action="Edit" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="ImageFileName" />
+                <input type="hidden" asp-for="ImageFileData" />
                 <div class="newTicket mb-3">
                     <label for="CompanyId" class="control-label">Company</label>
                     <select asp-for="CompanyId" class="form-control custom-select" data-val="true" asp-items="ViewBag.CompanyId"></select>
@@ -35,14 +37,15 @@
                     <textarea input asp-for="Description" class="form-control"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
+
                 <div class="newTicket mb-3">
                     <label for="ImageFileName" class="newTicket">Image Name</label>
                     <input asp-for="ImageFileName" class="form-control" />
                     <span asp-validation-for="ImageFileName" class="text-danger"></span>
                 </div>
                 <div class="newTicket mb-3">
-                    <label for="ImageFileData" class="control-label">Image File</label>
-                    <input asp-for="ImageFormFile" class="form-control-file" />
+                    <label for="ImageFileData" class="newTicket">Image File Data</label>
+                    <input asp-for="ImageFormFile" name="file" class="form-control" />
                     <span asp-validation-for="ImageFileData" class="text-danger"></span>
                 </div>
                 <div class="form-group">

@@ -22,9 +22,10 @@ namespace Phoenix.Services
 
         }
 
-        public string ConvertByteArrayToFile(byte[] fileData, string extension)
+        public string ConvertByteArrayToFile(byte[] fileData, string fileName)
         {
             string imageBase64Data = Convert.ToBase64String(fileData);
+            var extension = Path.GetExtension(fileName);
             return string.Format($"data:image/{extension};base64,{imageBase64Data}");
 
         }
