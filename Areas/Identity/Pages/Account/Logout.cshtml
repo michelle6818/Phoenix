@@ -11,7 +11,10 @@
         <div class="col-md-6 mt-lg-5 widget widget-one_hybrid widget-followers p-5 mt-5">
             <div class="row">
                 <div class="col">
+                    @if (User.Identity.IsAuthenticated)
+                    {
                     <h2 class="newTicket text-center">Goodbye, @user.FullName!</h2>
+                    }
                 </div>
             </div>
             <div class="row">
