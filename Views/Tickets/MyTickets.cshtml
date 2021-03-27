@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<Phoenix.Models.Ticket>
 @inject Microsoft.AspNetCore.Identity.UserManager<BTUser> _userManager
+@inject Phoenix.Services.IBTRoleService _roleService
 
 @{
     ViewData["Title"] = "";
@@ -51,9 +52,10 @@
                                         {
                                             <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                                         }
-                                        @if (User.IsInRole("Admin"))
+                                        @if (User.IsInRole("Admin") && (!User.IsInRole("Demo")))
                                         {
-                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Delete</a>}
+                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        }
 
                                     </div>
                                 </div>

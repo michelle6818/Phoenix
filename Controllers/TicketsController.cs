@@ -259,6 +259,11 @@ namespace Phoenix.Controllers
             {
                 return NotFound();
             }
+
+            if (User.IsInRole("Demo"))
+            {
+                return RedirectToAction("MyTickets");
+            }
             
            ////Restrict to only people on the project
            // var user = await _userManager.GetUserAsync(User);
@@ -294,6 +299,7 @@ namespace Phoenix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,DeveloperUserId")] Ticket ticket)
         {
             if (id != ticket.Id)
@@ -330,11 +336,11 @@ namespace Phoenix.Controllers
                         _context.Update(ticket);
                         //Admin can make changes
                         //Submitter can make changes to tickets they own
-                        if (ticket.OwnerUserId == user.Id)
+                        if ((ticket.OwnerUserId == user.Id) && (!User.IsInRole("Demo")))
                         {
                             await _context.SaveChangesAsync();
                         }
-                        else if (User.IsInRole("Admin"))
+                        else if ((User.IsInRole("Admin") && (!User.IsInRole("Demo"))))
                         {
                             await _context.SaveChangesAsync();
                         }

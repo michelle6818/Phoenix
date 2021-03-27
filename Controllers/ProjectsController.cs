@@ -229,7 +229,7 @@ namespace Phoenix.Controllers
                         project.ImageFileName = file.FileName;
                         project.ImageFileData = await _fileService.ConvertFileToByteArrayAsync(file);
                     }
-                    _context.Update(project);                                              //breaks here
+                    _context.Update(project);                                             
                     if (!User.IsInRole("DemoUser"))
                    {
                     var member = await _projectService.UsersOnProjectAsync(project.Id);

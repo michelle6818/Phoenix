@@ -49,10 +49,13 @@
                             <div class="col-md">
                                 @if (User.IsInRole("Admin") || User.IsInRole("Submitter") || User.IsInRole("Developer"))
                                 {
+                                @if (!User.IsInRole("Demo"))
+                                {
                                 <h1 class="newTicket">
                                     @Model.Title
                                     <a class="btn btn-info text-dark float-right" data-target="#edit" data-toggle="modal">Edit Ticket</a>
                                 </h1><hr />
+                                    }
                                 }
                             </div>
                         </div>
